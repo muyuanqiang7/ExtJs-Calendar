@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExtJs Jquery Calendar Example</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="resources/css/extJs/ext-theme-crisp-all.css"/>
+
+    <!-- GC -->
+    <script type="text/javascript" src="./src/extJs/ext-all-debug.js"></script>
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            Ext.override(Ext.form.field.Base, {
+                initEvents: function () {
+                    var me = this,
+                        inputEl = me.inputEl,
+                        onFieldMutation = me.onFieldMutation,
+                        events = me.checkChangeEvents,
+                        len = events.length,
+                        i, event;
+                    if (inputEl) {
+                        me.mon(inputEl, Ext.supports.SpecialKeyDownRepeat ? 'keydown' : 'keypress', me.fireKey, me);
+                        for (i = 0; i < len; ++i) {
+                            event = events[i];
+                            if (event === 'propertychange') {
+                                me.usesPropertychange = true;
+                            }
+                            if (event === 'textInput') {
+                                me.usesTextInput = true;
+                            }
+                            me.mon(inputEl, event, onFieldMutation, me);
+                        }
+                    }
+                    me.callParent();
+                },
+
+                bindPropertyChange: function (active) {
+                    var method = active ? 'resumeEvent' : 'suspendEvent',
+                        inputEl = this.inputEl;
+                    if (this.usesPropertychange) {
+                        inputEl[method]('propertychange');
+                    }
+                    if (this.usesTextInput) {
+                        inputEl[method]('textInput');
+                    }
+                }
+            });
+            Ext.create('Ext.form.field.ComboBox', {
+                name: 'cmb',
+                fieldLabel: '人员',
+                margin: '2 0 2 0',
+                labelWidth: 135,
+                id: 'box2',
+                labelAlign: 'right',
+                editable: false,
+                allowBlank: false,
+                multiSelect: true,
+                triggerAction: 'all',
+                checkChangeEvents: Ext.isIE ?
+                    ['change', 'propertychange', 'keyup'] :
+                    ['change', 'input', 'textInput', 'keyup', 'dragdrop'],
+                store: {
+                    fields: ['personId', 'personName'],
+                    data: [
+                        {'personId': '0', personName: '张444三'},
+                        {'personId': '1', personName: '李四'},
+                        {'personId': '2', personName: '王五'},
+                        {'personId': '3', personName: '小名'}
+                    ]
+                },
+                listConfig: {
+                    itemTpl: Ext.create('Ext.XTemplate', '<input type=checkbox>{[values.personName]}'),
+                    onItemSelect: function (record) {
+                        var node = this.getNode(record);
+                        console.log(node);
+                        console.log(record);
+                        if (node) {
+                            Ext.fly(node).addCls(this.selectedItemCls);
+                            var checkboxs = node.getElementsByTagName("input");
+                            if (checkboxs != null)
+                                var checkbox = checkboxs[0];
+                            checkbox.checked = true;
+                        }
+                    },
+                    listeners: {
+                        itemclick: function (view, record, item, index, e, eOpts) {
+                            var isSelected = view.isSelected(item);
+                            var checkboxs = item.getElementsByTagName("input");
+                            if (checkboxs != null) {
+                                var checkbox = checkboxs[0];
+                                if (!isSelected) {
+                                    checkbox.checked = true;
+                                } else {
+                                    checkbox.checked = false;
+                                }
+                            }
+                        }
+                    }
+                },
+//                afterSubTpl: Ext.create('Ext.XTemplate', '<input type=checkbox>{[values.personName]}'),
+                queryMode: 'local',
+                displayField: 'personName',
+                valueField: 'personId',
+                renderTo: Ext.getBody()
+            });
+        })
+        function getValues(v) {
+            var data = Ext.getCmp(v).getValue();
+            alert(data);
+        }
+    </script>
+    <style>
+
+    </style>
+</head>
+<body>
+<!--<div id="top">Top Div</div>-->
+<!--<div id="calendar"></div>-->
+<!--<div id="container"></div>-->
+<input type="button" onclick="getValues('box2');" value="获取值"/>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExtJs Jquery Calendar Example</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="resources/css/extJs/ext-theme-crisp-all.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/fullcalendar/fullcalendar.min.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/fullcalendar/fullcalendar.print.min.css" media="print"/>
+
+    <!-- GC -->
+    <script type="text/javascript" src="./src/fullcalendar/moment.min.js"></script>
+    <script type="text/javascript" src="./src/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="./src/fullcalendar/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="./src/fullcalendar/zh-cn.js"></script>
+    <script type="text/javascript" src="./src/extJs/ext-all-debug.js"></script>
+    <script type="text/javascript">
+        //        var extReady = false;
+        //        var jQueryReady = false;
+        //
+        //        var librariesReady = function () {
+        //            if (jQueryReady && extReady) {
+        ////                Ext.Msg.alert("Status", $('#top').text());
+        //                var win = new Ext.Panel({
+        //                    layout: 'fit',
+        //                    width: 900,
+        //                    height: 800,
+        //                    title: '节假日安排',
+        //                    renderTo: Ext.getBody(),
+        //                    items: [
+        //                        {
+        //                            xtype: 'box',
+        //                            width: 600,
+        //                            height: 600,
+        //                            autoEl: {
+        //                                tag: 'div',
+        //                                html: '<div id="calendar"></div>'
+        //                            }
+        //                        }],
+        //                    listeners: {
+        //                        // when the window is activated
+        //                        'afterrender': function () {
+        //                            // call jquery fullcalendar
+        //                            $('#calendar').fullCalendar({
+        //                                header: {
+        //                                    left: 'prev,today,next',
+        //                                    center: 'title',
+        //                                    right: 'month,agendaWeek,agendaDay'
+        //                                },
+        //                                locale: "zh-cn",
+        //                                buttonIcons: false, // show the prev/next text
+        //                                weekNumbers: true,
+        //                                navLinks: true, // can click day/week names to navigate views
+        //                                selectable: true,
+        //                                selectHelper: true,
+        //                                select: function (start, end) {
+        //                                    Ext.MessageBox.prompt('事件原因', '请输入事件原因', function (btn, text) {
+        //                                        var eventData;
+        //                                        if (text) {
+        //                                            console.log(moment(start).format('YYYY-MM-DD HH:mm:ss'));
+        ////                                            console.log(end);
+        //                                            eventData = {
+        //                                                title: text,
+        //                                                start: start,
+        //                                                end: end,
+        //                                                color: 'red'
+        //                                            };
+        //                                            $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+        //                                        }
+        //                                        $('#calendar').fullCalendar('unselect');
+        //                                    });
+        //                                },
+        //                                editable: true,
+        //                                eventLimit: true, // allow "more" link when too many events
+        //                                //height: 650,
+        ////                                aspectRatio: 2,
+        //                                eventTextColor: '#e5e5e5',
+        //                                // get calendar feed from events/feed controller function and return via feed.ctp
+        //                                eventClick: function (event) {
+        //                                    console.log(event);
+        //                                },
+        //                                eventMouseover: function (calEvent, jsEvent, view) {
+        //                                    $(this).attr('title', calEvent.fullName);
+        //                                    $(this).css('font-weight', 'normal');
+        //                                },
+        //                                events: [{
+        //                                    title: '春节放假',
+        //                                    start: '2017-05-07',
+        //                                    end: '2017-05-10',
+        //                                    color: 'blue',
+        //                                    fullName: '春节放假7天'
+        //                                }]
+        //                            });
+        //                        }
+        //                    }
+        //                });
+        //            }
+        //        };
+        //
+        //        $(document).ready(function () {
+        //            jQueryReady = true;
+        //            librariesReady();
+        //        });
+        //        Ext.onReady(function () {
+        //            extReady = true;
+        //            librariesReady();
+        //        });
+        Ext.onReady(function () {
+            var data = [
+                {"status_id": 1, "status_name": "Pending"},
+                {"status_id": 2, "status_name": "Ready"},
+                {"status_id": 3, "status_name": "Processing"},
+                {"status_id": 4, "status_name": "Unavailable"},
+                {"status_id": 5, "status_name": "Ready"},
+            ];
+
+            Ext.define("StatusModel", {
+                extend: 'Ext.data.Model',
+                fields: ['status_id', 'status_name']
+            });
+
+            Ext.create('Ext.data.Store', {
+                storeId: 'statusStore',
+                model: "StatusModel",
+                groupField: 'status_id',
+                data: data,
+                proxy: {
+                    type: 'memory',
+                    reader: {
+                        type: 'json'
+                    }
+                }
+            });
+
+            var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
+//                groupHeaderTpl: '{[values.rows[0].data.status_name]}',
+                groupHeaderTpl: '{[console.log(values)]}'
+            });
+
+            Ext.create('Ext.grid.Panel', {
+                title: 'Status',
+                store: Ext.getStore('statusStore'),
+                columns: [
+                    {text: 'Id', dataIndex: 'status_id'},
+                    {text: 'Name', dataIndex: 'status_name', flex: 1}
+                ],
+                features: [groupingFeature],
+                renderTo: Ext.getBody()
+            });
+        })
+    </script>
+    <!--<style>-->
+
+    <!--body {-->
+    <!--margin: 0;-->
+    <!--padding: 0;-->
+    <!--font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;-->
+    <!--font-size: 14px;-->
+    <!--}-->
+
+    <!--#top {-->
+    <!--background: #eee;-->
+    <!--border-bottom: 1px solid #ddd;-->
+    <!--padding: 0 10px;-->
+    <!--line-height: 40px;-->
+    <!--font-size: 12px;-->
+    <!--}-->
+
+    <!--#calendar {-->
+    <!--max-width: 600px;-->
+    <!--margin: 40px auto;-->
+    <!--padding: 0 10px;-->
+    <!--}-->
+
+    <!--</style>-->
+</head>
+<body>
+<!--<div id="top">Top Div</div>-->
+<!--<div id="calendar"></div>-->
+<!--<div id="container"></div>-->
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" type="text/css" href="resources/css/extJs/ext-theme-crisp-all.css"/>
+
+<!-- GC -->
+<script type="text/javascript" src="./src/extJs/ext-all-debug.js"></script>
+<script type="text/javascript" src="component.js"></script>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        var _button = new Ext.Button({
+            //Ext.getBody().dom == document.body;
+            renderTo: Ext.getBody(),
+            text: "show",
+            minWidth: 100,
+            handler: function () {
+                var regiTypesEdit = Ext.create("app.platform.estate.view.register.sysconfig.businesslogic.RegiBusinessLogicEdit", {});
+                regiTypesEdit.show();
+            }
+        });
+
+    });
+</script>
+<body>
+
+</body>
+</html>

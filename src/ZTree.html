@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+    <meta http-equiv="content-language" content=""/>
+    <meta name="description" content=""/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+    <!-- GC -->
+    <script type="text/javascript" src="./extJs/ext-all-debug.js"></script>
+    <script type="text/javascript" src="./TreeCombo.js"></script>
+    <script type="text/javascript" src="./RowBodyExtend.js"></script>
+    <style type="text/css">
+        html, body {
+            font: normal 12px verdana;
+            margin: 0;
+            padding: 10px;
+            border: 0 none;
+            height: 100%;
+        }
+
+        .extex {
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        /* check combo */
+        .x-combo-checker {
+            background-position: 50% -2px;
+            margin-left: 1px;
+            background-color: transparent;
+            background-image: url("/extjs/resources/themes/images/default/grid/unchecked.gif");
+            background-position: -1px -1px;
+            background-repeat: no-repeat;
+            height: 14px;
+            width: 14px;
+            display: inline-block;
+        }
+
+        .x-boundlist-selected .x-combo-checker {
+            background-image: url("/extjs/resources/themes/images/default/grid/checked.gif");
+        }
+
+        /* rowbodyexpander */
+        .rowbodyexpander-row-body td {
+            border-bottom: 1px solid #EDEDED;;
+        }
+
+        .rowbodyexpander-row-body .rowbody-extend {
+            margin-left: 24px;
+            background-color: #333;
+            color: #FFF;
+            width: 75px;
+            padding: 2px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .rowbodyexpander-row-body .rowbody-extend.show {
+            display: block;
+        }
+
+        .rowbodyexpander-row-body .rowbody-extend.hide {
+            display: none;
+        }
+
+        .rowbodyexpander-row-body .rowbodyexpander-row-body-text {
+            margin-left: 24px;
+            padding: 2px;
+        }
+
+        .rowbodyexpander-row-body .noshow .rowbody-extend {
+            display: none !important;
+        }
+
+        .rowbodyexpander-row-body .rowbodyexpander-row-body-text.collapsed {
+            max-height: 15px;
+        }
+
+        .rowbodyexpander-row-body .rowbodyexpander-row-body-text.expanded {
+        }
+
+        .rowbodyexpander-table table {
+            border-collapse: collapse;
+        }
+
+        .rowbodyexpander-table.x-grid-with-row-lines .x-grid-cell {
+            border-width: 0 !important;
+        }
+
+        .rowbodyexpander-table .x-grid-row-focused + .rowbodyexpander-row-body {
+            background-color: #DFE8F6 !important;
+        }
+
+        .rowbodyexpander-table .x-grid-row-alt + .rowbodyexpander-row-body {
+            background-color: #FAFAFA !important;
+        }
+
+        .rowbodyexpander-table .rowbodyexpander-row-prebody {
+            width: 24px;
+            height: 500px;
+            display: block;
+            float: left;
+            background-color: #F6F6F6;
+            background-image: -moz-linear-gradient(left center, #F6F6F6, #E9E9E9);
+            margin-right: 5px;
+            position: absolute;
+        }
+
+        .rowbodyexpander-table .x-grid-rowbody {
+            overflow: hidden;
+            position: relative;
+        }
+
+    </style>
+    <script type="text/javascript">
+        var store = Ext.create('Ext.data.Store',
+                {
+                    fields: ['id', 'type'],
+                    data: [
+                        {id: '1', type: 'option one'},
+                        {id: '2', type: 'option two'},
+                        {id: '3', type: 'option three'},
+                        {id: '4', type: 'option four'},
+                        {id: '5', type: 'option five'},
+                        {id: '6', type: 'option six'},
+                        {id: '7', type: 'option seven'}
+                    ]
+                });
+
+        var treeStore = Ext.create('Ext.data.TreeStore',
+                {
+                    root: {
+                        text: 'Root',
+                        id: 'root',
+                        expanded: true,
+                        children: [
+                            {
+                                id: '1', text: 'First node', leaf: false, children: [
+                                {id: '3', text: 'First child node', leaf: true},
+                                {id: '4', text: 'Second child node', leaf: true}
+                            ]
+                            },
+                            {id: '2', text: 'Second node', leaf: true}
+                        ]
+                    },
+                    folderSort: false
+                });
+
+        var treeStoreSec = Ext.create('Ext.data.TreeStore',
+                {
+                    root: {
+                        text: 'Root',
+                        id: 'root',
+                        expanded: true,
+                        checked: false,
+                        children: [
+                            {
+                                id: '1', text: 'First node', leaf: false, checked: false, children: [
+                                {id: '3', text: 'First child node', checked: false, leaf: true},
+                                {id: '4', text: 'Second child node', checked: false, leaf: true}
+                            ]
+                            },
+                            {id: '2', text: 'Second node', checked: false, leaf: true}
+                        ]
+                    },
+                    folderSort: false
+                });
+
+        var gridStore = Ext.create('Ext.data.Store',
+                {
+                    fields: ['id', 'name', 'type'],
+                    data: [
+                        {id: 'active', name: 'first line', type: 'This is one line text'},
+                        {
+                            id: 'inactive',
+                            name: 'second line',
+                            type: 'This is multi line text <br>Second line<br>Third line<br>Fourth line<br>'
+                        }
+                    ]
+                });
+
+        //        Ext.require('Ext.ux.RowBodyExtend');
+
+        Ext.onReady(function () {
+            Ext.create('Ext.ux.TreeCombo',
+                    {
+                        renderTo: 'treecombo2',
+                        store: treeStore,
+                        selectChildren: false,
+                        canSelectFolders: false
+                    });
+
+            Ext.create('Ext.ux.TreeCombo',
+                    {
+                        renderTo: 'treecombo3',
+                        store: treeStore,
+                        selectChildren: false,
+                        canSelectFolders: true
+                    });
+
+            Ext.create('Ext.ux.TreeCombo',
+                    {
+                        renderTo: 'treecombo4',
+                        store: treeStore,
+                        selectChildren: true,
+                        canSelectFolders: true
+                    });
+
+            Ext.create('Ext.ux.TreeCombo',
+                    {
+                        renderTo: 'treecombo5',
+                        store: treeStoreSec
+                    });
+//            Ext.create('Ext.form.button', {});
+
+        });
+    </script>
+</head>
+<body>
+<h1>ExtJs 4 extensions examples</h1>
+<fieldset class="extex">
+    <legend>Check combo:</legend>
+    <p>Check combo without select all option</p>
+    <div id="checkcombowithoutall"></div>
+    <br/><br/>
+    <p>Check combo with select all option</p>
+    <div id="checkcombowithall"></div>
+</fieldset>
+
+<fieldset class="extex">
+    <legend>Tree combo</legend>
+    <p>Simple tree combo</p>
+    <div id="treecombo1"></div>
+    <br/><br/>
+    <p>Tree combo, can only select one leaf node</p>
+    <div id="treecombo2"></div>
+    <br/><br/>
+    <p>Tree combo, can select only one node</p>
+    <div id="treecombo3"></div>
+    <br/><br/>
+    <p>Tree combo, selects node and all children under that node</p>
+    <div id="treecombo4"></div>
+    <br/><br/>
+    <p>Checkbox tree combo</p>
+    <div id="treecombo5"></div>
+    <br/><br/>
+</fieldset>
+
+<fieldset class="extex">
+    <legend>Read more row body extension</legend>
+    <div id="readmore1"></div>
+    <br/><br/>
+</fieldset>
+
+</body>
+</html> 
+

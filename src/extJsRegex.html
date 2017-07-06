@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExtJs Regex</title>
+    <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+    <script type="text/javascript" src="extJs/ext-all-debug.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        Ext.create('Ext.form.Panel', {
+            title: 'Contact Info',
+            width: 300,
+            bodyPadding: 10,
+            renderTo: Ext.getBody(),
+            items: [{
+                xtype: 'textfield',
+                name: 'name',
+                fieldLabel: 'Name',
+                regex: /^[\d+]|[\w?\d+\-\w?\d+]$/,
+                regexText: "员工号只能由字母和数字组成！",
+                allowBlank: false  // requires a non-empty value
+            }, {
+                xtype: 'textfield',
+                name: 'email',
+                fieldLabel: 'Email Address',
+                vtype: 'email'  // requires value to be a valid email address format
+            }]
+        });
+    });
+    init();
+    function init() {
+        var u = 'asdfadfa00002adfadsf1111';
+        var result = getLastNumberStr(u);
+        if (result == '') {
+            console.log("not number");
+        } else {
+            console.log(result);
+            console.log("number");
+        }
+    }
+
+    /*
+     获取传入字符串的最后几个数字
+     */
+    function getLastNumberStr(str) {
+        var strs = str.replace(/[A-Za-z]/g, '*');
+        console.log(strs);
+        var strsArr = strs.split('*');
+        console.log(strsArr);
+        return strsArr[strsArr.length - 1];
+    }
+
+</script>
+</html>
