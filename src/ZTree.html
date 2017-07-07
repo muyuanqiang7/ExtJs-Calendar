@@ -7,12 +7,13 @@
     <meta name="description" content=""/>
     <title></title>
     <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+    <link rel="stylesheet" type="text/css" href="./font-awesome-4.3.0/css/font-awesome.css"/>
     <!-- GC -->
     <script type="text/javascript" src="./extJs/ext-all-debug.js"></script>
     <script type="text/javascript" src="./TreeCombo.js"></script>
     <!--<script type="text/javascript" src="./CheckCombo.js"></script>-->
     <script type="text/javascript" src="./RowBodyExtend.js"></script>
-    <script type="text/javascript" src="test.js"></script>
+    <script type="text/javascript" src="CheckCombo.js"></script>
     <style type="text/css">
         html, body {
             font: normal 12px verdana;
@@ -20,6 +21,13 @@
             padding: 10px;
             border: 0 none;
             height: 100%;
+        }
+
+        .my-foo-trigger {
+            background: url("./add_2.png") 0 no-repeat;
+            /*background: url("./add.png");*/
+            /*width: 22px;*/
+            /*height: 22px;*/
         }
 
         .extex {
@@ -183,92 +191,155 @@
                     ]
                 });
 
-//        Ext.require('Ext.ux.RowBodyExtend');
+        //        Ext.require('Ext.ux.RowBodyExtend');
 
         Ext.onReady(function () {
-            Ext.create('Ext.ux.CheckCombo',
-                    {
-                        renderTo: 'checkcombowithoutall',
-                        valueField: 'id',
-                        displayField: 'type',
-                        store: store
-                    });
+            Ext.create("Ext.panel.Panel", {
+                renderTo: Ext.getBody(),
+                items: [{
+                    border: false,
+                    layout: 'column',
+                    items: [{
+                        xtype: 'textfield',
+                        fieldLabel: 'My'
+                    },
+                        {
+                        xtype: 'label',
+                        style: {
+                            marginBottom: '4px',
+                            paddingLeft: '10px',
+                            paddingTop: '5px'
+                        },
+                        html: '<i class="fa fa-eye" aria-hidden="true"></i>',
+                        listeners: {
+                            render: function (c) {
+                                c.getEl().on({
+                                    click: function (e, el) {
+                                        if (el.classList.contains('fa-eye')) {
+                                            el.classList.remove('fa-eye');
+                                            el.classList.toggle('fa-eye-slash');
+                                        } else {
+                                            el.classList.remove('fa-eye-slash');
+                                            el.classList.toggle('fa-eye');
+                                        }
+                                    },
+                                    scope: c
+                                });
+                            }
+                        }
+                    }, {
+                        xtype: 'label',
+                        style: {
+                            marginBottom: '4px',
+                            paddingLeft: '10px',
+                            paddingTop: '5px'
+                        },
+                        html: '<div><img class="require" src="./require.png" style="width: 16px;height: 16px"></div>',
+                        listeners: {
+                            render: function (c) {
+                                c.getEl().on({
+                                    click: function (e, el) {
+                                        if (el.classList.contains('require')) {
+                                            el.classList.remove('require');
+                                            el.src = './no-require.png';
+                                        } else {
+                                            el.classList.toggle('require');
+                                            el.src = './require.png';
+                                        }
+                                    },
+                                    scope: c
+                                });
+                            }
+                        }
+                    }]
 
-            Ext.create('Ext.ux.CheckCombo',
-                    {
-                        renderTo: 'checkcombowithall',
-                        valueField: 'id',
-                        displayField: 'type',
-                        store: store,
-                        addAllSelector: true
-                    });
-            Ext.create('Ext.ux.TreeCombo',
-                    {
-                        renderTo: 'treecombo2',
-                        store: treeStore,
-                        selectChildren: false,
-                        canSelectFolders: false
-                    });
-
-            Ext.create('Ext.ux.TreeCombo',
-                    {
-                        renderTo: 'treecombo3',
-                        store: treeStore,
-                        selectChildren: false,
-                        canSelectFolders: true
-                    });
-
-            Ext.create('Ext.ux.TreeCombo',
-                    {
-                        renderTo: 'treecombo4',
-                        store: treeStore,
-                        selectChildren: true,
-                        canSelectFolders: true
-                    });
-
-            Ext.create('Ext.ux.TreeCombo',
-                    {
-                        renderTo: 'treecombo5',
-                        store: treeStoreSec
-                    });
-        });
+                }]
+            })
+            ;
+            //            Ext.create('Ext.ux.CheckCombo',
+            //                    {
+            //                        renderTo: 'checkcombowithoutall',
+            //                        valueField: 'id',
+            //                        displayField: 'type',
+            //                        store: store
+            //                    });
+            //
+            //            Ext.create('Ext.ux.CheckCombo',
+            //                    {
+            //                        renderTo: 'checkcombowithall',
+            //                        valueField: 'id',
+            //                        displayField: 'type',
+            //                        store: store,
+            //                        addAllSelector: true
+            //                    });
+            //            Ext.create('Ext.ux.TreeCombo',
+            //                    {
+            //                        renderTo: 'treecombo2',
+            //                        store: treeStore,
+            //                        selectChildren: false,
+            //                        canSelectFolders: false
+            //                    });
+            //
+            //            Ext.create('Ext.ux.TreeCombo',
+            //                    {
+            //                        renderTo: 'treecombo3',
+            //                        store: treeStore,
+            //                        selectChildren: false,
+            //                        canSelectFolders: true
+            //                    });
+            //
+            //            Ext.create('Ext.ux.TreeCombo',
+            //                    {
+            //                        renderTo: 'treecombo4',
+            //                        store: treeStore,
+            //                        selectChildren: true,
+            //                        canSelectFolders: true
+            //                    });
+            //
+            //            Ext.create('Ext.ux.TreeCombo',
+            //                    {
+            //                        renderTo: 'treecombo5',
+            //                        store: treeStoreSec
+            //                    });
+        })
+        ;
     </script>
 </head>
 <body>
-<h1>ExtJs 4 extensions examples</h1>
-<fieldset class="extex">
-    <legend>Check combo:</legend>
-    <p>Check combo without select all option</p>
-    <div id="checkcombowithoutall"></div>
-    <br/><br/>
-    <p>Check combo with select all option</p>
-    <div id="checkcombowithall"></div>
-</fieldset>
+<!--<h1>ExtJs 4 extensions examples</h1>-->
+<!--<fieldset class="extex">-->
+<!--<legend>Check combo:</legend>-->
+<!--<p>Check combo without select all option</p>-->
+<!--<div id="checkcombowithoutall"></div>-->
+<!--<br/><br/>-->
+<!--<p>Check combo with select all option</p>-->
+<!--<div id="checkcombowithall"></div>-->
+<!--</fieldset>-->
 
-<fieldset class="extex">
-    <legend>Tree combo</legend>
-    <p>Simple tree combo</p>
-    <div id="treecombo1"></div>
-    <br/><br/>
-    <p>Tree combo, can only select one leaf node</p>
-    <div id="treecombo2"></div>
-    <br/><br/>
-    <p>Tree combo, can select only one node</p>
-    <div id="treecombo3"></div>
-    <br/><br/>
-    <p>Tree combo, selects node and all children under that node</p>
-    <div id="treecombo4"></div>
-    <br/><br/>
-    <p>Checkbox tree combo</p>
-    <div id="treecombo5"></div>
-    <br/><br/>
-</fieldset>
+<!--<fieldset class="extex">-->
+<!--<legend>Tree combo</legend>-->
+<!--<p>Simple tree combo</p>-->
+<!--<div id="treecombo1"></div>-->
+<!--<br/><br/>-->
+<!--<p>Tree combo, can only select one leaf node</p>-->
+<!--<div id="treecombo2"></div>-->
+<!--<br/><br/>-->
+<!--<p>Tree combo, can select only one node</p>-->
+<!--<div id="treecombo3"></div>-->
+<!--<br/><br/>-->
+<!--<p>Tree combo, selects node and all children under that node</p>-->
+<!--<div id="treecombo4"></div>-->
+<!--<br/><br/>-->
+<!--<p>Checkbox tree combo</p>-->
+<!--<div id="treecombo5"></div>-->
+<!--<br/><br/>-->
+<!--</fieldset>-->
 
-<fieldset class="extex">
-    <legend>Read more row body extension</legend>
-    <div id="readmore1"></div>
-    <br/><br/>
-</fieldset>
+<!--<fieldset class="extex">-->
+<!--<legend>Read more row body extension</legend>-->
+<!--<div id="readmore1"></div>-->
+<!--<br/><br/>-->
+<!--</fieldset>-->
 
 </body>
 </html> 
