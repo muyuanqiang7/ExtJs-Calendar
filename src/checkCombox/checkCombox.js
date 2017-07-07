@@ -1,37 +1,36 @@
 /**
  * Created by muyuanqiang on 2017/5/12.
  */
-Ext.define('Ext.ux.CheckCombo',{
+Ext.define('Ext.ux.CheckCombo', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.checkcombo',
     multiSelect: true,
     allSelector: false,
     addAllSelector: false,
     allText: 'All',
-    createPicker: function() {
+    createPicker: function () {
         var me = this,
-            picker,
-            menuCls = Ext.baseCSSPrefix + 'menu',
-            opts = Ext.apply({
-                pickerField: me,
-                selModel: {
-                    mode: me.multiSelect ? 'SIMPLE' : 'SINGLE'
-                },
-                floating: true,
-                hidden: true,
-                ownerCt: me.ownerCt,
-                cls: me.el.up('.' + menuCls) ? menuCls : '',
-                store: me.store,
-                displayField: me.displayField,
-                focusOnToFront: false,
-                pageSize: me.pageSize,
-                tpl:
-                    [
-                        '<ul><tpl for=".">',
-                        '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item"><span class="x-combo-checker"> </span> {' + me.displayField + '}</li>',
-                        '</tpl></ul>'
+                picker,
+                menuCls = Ext.baseCSSPrefix + 'menu',
+                opts = Ext.apply({
+                    pickerField: me,
+                    selModel: {
+                        mode: me.multiSelect ? 'SIMPLE' : 'SINGLE'
+                    },
+                    floating: true,
+                    hidden: true,
+                    ownerCt: me.ownerCt,
+                    cls: me.el.up('.' + menuCls) ? menuCls : '',
+                    store: me.store,
+                    displayField: me.displayField,
+                    focusOnToFront: false,
+                    pageSize: me.pageSize,
+                    tpl: [
+                        '<tpl for=".">',
+                        '<div role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item"><span class="x-combo-checker"> </span> {' + me.displayField + '}</div>',
+                        '</tpl>'
                     ]
-            }, me.listConfig, me.defaultListConfig);
+                }, me.listConfig, me.defaultListConfig);
         picker = me.picker = Ext.create('Ext.view.BoundList', opts);
         if (me.pageSize) {
             picker.pagingToolbar.on('beforechange', me.onPageChange, me);
@@ -49,18 +48,15 @@ Ext.define('Ext.ux.CheckCombo',{
         });
         return picker;
     },
-    getValue: function()
-    {
+    getValue: function () {
         return this.value.join(',');
     },
-    getSubmitValue: function()
-    {
+    getSubmitValue: function () {
         return this.getValue();
     },
-    expand: function()
-    {
+    expand: function () {
         var me = this,
-            bodyEl, picker, collapseIf;
+                bodyEl, picker, collapseIf;
         if (me.rendered && !me.isExpanded && !me.isDestroyed) {
             bodyEl = me.bodyEl;
             picker = me.getPicker();
@@ -70,22 +66,17 @@ Ext.define('Ext.ux.CheckCombo',{
             me.isExpanded = true;
             me.alignPicker();
             bodyEl.addCls(me.openCls);
-            if(me.addAllSelector == true && me.allSelector == false)
-            {
-                me.allSelector = picker.getEl().insertHtml('afterBegin', '<div class="x-boundlist-item" role="option"><span class="x-combo-checker"> </span> '+me.allText+'</div>', true);
-                me.allSelector.on('click', function(e)
-                {
-                    if(me.allSelector.hasCls('x-boundlist-selected'))
-                    {
+            if (me.addAllSelector == true && me.allSelector == false) {
+                me.allSelector = picker.getEl().insertHtml('afterBegin', '<div class="x-boundlist-item" role="option"><span class="x-combo-checker"> </span> ' + me.allText + '</div>', true);
+                me.allSelector.on('click', function (e) {
+                    if (me.allSelector.hasCls('x-boundlist-selected')) {
                         me.allSelector.removeCls('x-boundlist-selected');
                         me.setValue('');
                         me.fireEvent('select', me, []);
                     }
-                    else
-                    {
+                    else {
                         var records = [];
-                        me.store.each(function(record)
-                        {
+                        me.store.each(function (record) {
                             records.push(record);
                         });
                         me.allSelector.addCls('x-boundlist-selected');
@@ -105,11 +96,10 @@ Ext.define('Ext.ux.CheckCombo',{
             me.onExpand();
         }
     },
-    onListSelectionChange: function(list, selectedRecords)
-    {
+    onListSelectionChange: function (list, selectedRecords) {
         var me = this,
-            isMulti = me.multiSelect,
-            hasRecords = selectedRecords.length > 0;
+                isMulti = me.multiSelect,
+                hasRecords = selectedRecords.length > 0;
 
         if (me.isExpanded) {
             if (!isMulti) {
@@ -126,9 +116,8 @@ Ext.define('Ext.ux.CheckCombo',{
             me.inputEl.focus();
         }
 
-        if(me.addAllSelector == true && me.allSelector != false)
-        {
-            if(selectedRecords.length == me.store.getTotalCount()) me.allSelector.addCls('x-boundlist-selected');
+        if (me.addAllSelector == true && me.allSelector != false) {
+            if (selectedRecords.length == me.store.getTotalCount()) me.allSelector.addCls('x-boundlist-selected');
             else me.allSelector.removeCls('x-boundlist-selected');
         }
     }

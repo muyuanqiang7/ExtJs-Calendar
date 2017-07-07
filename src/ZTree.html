@@ -10,7 +10,9 @@
     <!-- GC -->
     <script type="text/javascript" src="./extJs/ext-all-debug.js"></script>
     <script type="text/javascript" src="./TreeCombo.js"></script>
+    <!--<script type="text/javascript" src="./CheckCombo.js"></script>-->
     <script type="text/javascript" src="./RowBodyExtend.js"></script>
+    <script type="text/javascript" src="test.js"></script>
     <style type="text/css">
         html, body {
             font: normal 12px verdana;
@@ -30,7 +32,7 @@
             background-position: 50% -2px;
             margin-left: 1px;
             background-color: transparent;
-            background-image: url("/extjs/resources/themes/images/default/grid/unchecked.gif");
+            background-image: url("./unchecked.gif");
             background-position: -1px -1px;
             background-repeat: no-repeat;
             height: 14px;
@@ -39,7 +41,7 @@
         }
 
         .x-boundlist-selected .x-combo-checker {
-            background-image: url("/extjs/resources/themes/images/default/grid/checked.gif");
+            background-image: url("./checked.gif");
         }
 
         /* rowbodyexpander */
@@ -181,9 +183,25 @@
                     ]
                 });
 
-        //        Ext.require('Ext.ux.RowBodyExtend');
+//        Ext.require('Ext.ux.RowBodyExtend');
 
         Ext.onReady(function () {
+            Ext.create('Ext.ux.CheckCombo',
+                    {
+                        renderTo: 'checkcombowithoutall',
+                        valueField: 'id',
+                        displayField: 'type',
+                        store: store
+                    });
+
+            Ext.create('Ext.ux.CheckCombo',
+                    {
+                        renderTo: 'checkcombowithall',
+                        valueField: 'id',
+                        displayField: 'type',
+                        store: store,
+                        addAllSelector: true
+                    });
             Ext.create('Ext.ux.TreeCombo',
                     {
                         renderTo: 'treecombo2',
@@ -213,8 +231,6 @@
                         renderTo: 'treecombo5',
                         store: treeStoreSec
                     });
-//            Ext.create('Ext.form.button', {});
-
         });
     </script>
 </head>
