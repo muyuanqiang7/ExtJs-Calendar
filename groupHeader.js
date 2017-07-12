@@ -2,7 +2,7 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
     extend: 'Ext.window.Window',
     xtype: 'fileCategoryManage-categoryEditTabFive',
     border: true,
-    width: 900,
+    width: 1200,
     height: 600,
     title: '设置档案权限',
     requires: [],
@@ -69,12 +69,12 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                     //}),
                     multiColumnSort: true,
                     features: [Ext.create('Ext.grid.feature.Grouping', {
-                                itemId: 'validGroup',
-                                collapsible: false,
-                                groupHeaderTpl: [
-                                    '<div style="display:inline-block;"><div style="float: left; width: 120px">{name}</div><div style="float: left">仅查阅</div><div style="float: left"><input class="chkGrp" type="checkbox" ></div><div style="float: left"><input class="chkGrp" type="checkbox" ></div><div style="float: left"> <input class="chkGrp" type="checkbox" > <div></div>'
-                                ]
-                            }
+                            itemId: 'validGroup',
+                            collapsible: false,
+                            groupHeaderTpl: [
+                                '<div style="display:inline-block;width: 100%;height: 100%"><div style="float: left; width: 16.65%;height: 100%;vertical-align: middle;text-align: center">{name}</div><div style="float: left; width: 16.66%;text-align: center">仅查阅</div><div style="float: left;width: 16.66%;text-align: center"><input class="forbid" type="checkbox" ></div><div style="float: left;width: 16.66%;text-align: center"><input class="readWrite" type="checkbox" ></div><div style="float: left;width: 16.66%;text-align: center"> <input class="readOnly" type="checkbox" ></div><div style="float: left;width: 16.70%;text-align: center"> <input class="custom" type="checkbox" ></div></div>'
+                            ]
+                        }
                     )],
                     viewConfig: {
                         enableTextSelection: true,
@@ -82,20 +82,23 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                     listeners: {
                         //gridPanel 分组被点击事件
                         groupclick: function (view, node, group, e, eOpts) {
-                            var elements = node.querySelectorAll('.' + e.target.className);
-                            if (elements) {
-                                Ext.Array.forEach(elements, function (item) {
-                                    if (item.checked) {
-                                        item.checked = false;
-                                    } else {
-                                        item.checked = true;
-                                    }
-                                });
+                            if (e.target.className) {
+                                var elements = node.querySelectorAll('input.' + e.target.className);
+                                if (elements) {
+                                    Ext.Array.each(elements, function (item) {
+                                        if (item.checked) {
+                                            console.log("true");
+                                            item.setAttribute("checked", "checked");
+                                        } else {
+                                            console.log("false");
+                                            item.removeAttribute("checked");
+                                        }
+                                    });
+                                }
                             }
                         }
                     },
                     columnLines: true,
-                    plugins: 'gridfilters',
                     columns: [
                         {text: '角色用户', dataIndex: 'funiusername', align: 'center', flex: 1},
                         {text: '权限预览', dataIndex: 'qxyl', align: 'center', flex: 1},
