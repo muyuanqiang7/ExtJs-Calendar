@@ -201,57 +201,57 @@
                     layout: 'column',
                     items: [{
                         xtype: 'textfield',
-                        fieldLabel: 'My'
+                        fieldLabel: 'My',
                     },
                         {
-                        xtype: 'label',
-                        style: {
-                            marginBottom: '4px',
-                            paddingLeft: '10px',
-                            paddingTop: '5px'
-                        },
-                        html: '<i class="fa fa-eye" aria-hidden="true"></i>',
-                        listeners: {
-                            render: function (c) {
-                                c.getEl().on({
-                                    click: function (e, el) {
-                                        if (el.classList.contains('fa-eye')) {
-                                            el.classList.remove('fa-eye');
-                                            el.classList.toggle('fa-eye-slash');
-                                        } else {
-                                            el.classList.remove('fa-eye-slash');
-                                            el.classList.toggle('fa-eye');
-                                        }
-                                    },
-                                    scope: c
-                                });
+                            xtype: 'label',
+                            style: {
+                                marginBottom: '4px',
+                                paddingLeft: '5px',
+                                paddingTop: '5px'
+                            },
+                            html: '<i class="fa fa-eye" aria-hidden="true"></i>',
+                            listeners: {
+                                render: function (c) {
+                                    c.getEl().on({
+                                        click: function (e, el) {
+                                            if (el.classList.contains('fa-eye')) {
+                                                el.classList.remove('fa-eye');
+                                                el.classList.toggle('fa-eye-slash');
+                                            } else if (el.classList.contains('fa-eye-slash')) {
+                                                el.classList.remove('fa-eye-slash');
+                                                el.classList.toggle('fa-eye');
+                                            }
+                                        },
+                                        scope: c
+                                    });
+                                }
                             }
-                        }
-                    }, {
-                        xtype: 'label',
-                        style: {
-                            marginBottom: '4px',
-                            paddingLeft: '10px',
-                            paddingTop: '5px'
-                        },
-                        html: '<div><img class="require" src="./require.png" style="width: 16px;height: 16px"></div>',
-                        listeners: {
-                            render: function (c) {
-                                c.getEl().on({
-                                    click: function (e, el) {
-                                        if (el.classList.contains('require')) {
-                                            el.classList.remove('require');
-                                            el.src = './no-require.png';
-                                        } else {
-                                            el.classList.toggle('require');
-                                            el.src = './require.png';
-                                        }
-                                    },
-                                    scope: c
-                                });
+                        }, {
+                            xtype: 'label',
+                            style: {
+                                marginBottom: '4px',
+                                paddingLeft: '0px',
+                                paddingTop: '5px'
+                            },
+                            html: '<div><img class="require" src="./require.png" style="width: 16px;height: 16px"></div>',
+                            listeners: {
+                                render: function (c) {
+                                    c.getEl().on({
+                                        click: function (e, el) {
+                                            if (el.classList.contains('require')) {
+                                                el.classList.remove('require');
+                                                el.src = './no-require.png';
+                                            } else {
+                                                el.classList.toggle('require');
+                                                el.src = './require.png';
+                                            }
+                                        },
+                                        scope: c
+                                    });
+                                }
                             }
-                        }
-                    }]
+                        }]
 
                 }]
             })

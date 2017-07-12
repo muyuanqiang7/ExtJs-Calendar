@@ -1,7 +1,6 @@
 //逻辑选择
 Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.RegiBusinessLogicValidResult', {
     extend: 'Ext.window.Window',
-    id: 'windowInfo',
     xtype: 'regiconfig-businesslogicconfig-regibusinesslogicvalidresult',
     title: '<span style="color:black;font-size:14px;height:100px;"><b>逻辑验证</b></span>',
     width: 700,
@@ -27,7 +26,12 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
      */
     config: {
         yslx: null,
-        treeNode: null
+        lxdm: null,
+        treeNode: null,
+        amount: 0,
+        success: 0,
+        fail: 0,
+        isContinue: false
     },
 
     // ====构造方法========================================================================
@@ -40,55 +44,35 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
     // ====视图构建========================================================================
     initComponent: function () {
         Ext.tip.QuickTipManager.init();
+        //var context = Ext.create("app.Context");
         var me = this;
-        Ext.create('Ext.data.Store', {
-            storeId: 'simpsonsStore',
-            fields: ['name', 'email', 'phone'],
-            groupField: 'name',
-            data: [
+        var yslxStore = context.getBusinessLogicConstraintTypeStore();
+        var result = Ext.appContext.invokeService(Funi.core.Context.path("estate", "/test/info"),
                 {
-                    name: '房屋是否存在不动产单元号',
-                    email: 'lisa@simpsons.com',
-                    phone: '1',
-                    message: '0109862331908、不动产单元号未办理国有产权首次登记'
-                },
-                {
-                    name: '房屋是否存在不动产单元号',
-                    email: 'lisa@simpsons.com',
-                    phone: '1',
-                    message: '0109862331908、不动产单元号未办理国有产权首次登记'
-                },
-                {
-                    name: '房屋是否存在不动产单元号',
-                    email: 'lisa@simpsons.com',
-                    phone: '1',
-                    message: '0109862331908、不动产单元号未办理国有产权首次登记'
-                },
-                {
-                    name: '房屋是否关联宗地信息',
-                    email: 'bart@simpsons.com',
-                    phone: '2',
-                    message: '19876611kh1121k1、不动产单元号未办理国有产权首次登记'
-                },
-                {
-                    name: '房屋是否存在有效抵押权信息',
-                    email: 'homer@simpsons.com',
-                    phone: '3',
-                    message: '210k2382101001不动产单元号未办理国有产权首次登记'
-                },
-                {
-                    name: '房屋是否存在有效抵押权信息',
-                    email: 'homer@simpsons.com',
-                    phone: '3',
-                    message: '210k2382101001不动产单元号未办理国有产权首次登记'
-                },
-                {
-                    name: '房屋是否存在正在办理抵押权信息',
-                    email: 'marge@simpsons.com',
-                    phone: '-1',
-                    message: '310k238210100不动产单元号未办理国有产权首次登记'
-                }
-            ]
+                    lxdm: '1010101001',
+                    yslx: 'jmys',
+                    fwbh: 'dbc1ba56-74c0-4357-a91a-39b61b54bfe7,dbc1ba56-74c0-4357-a91a,dbc1ba56-74c0-4357-a91a-adh67d'
+                });
+        var successStore = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: ['ljmc', 'status', 'tskg', 'yslx', 'message'],
+            groupField: 'yslx',
+            data: result.success
+        });
+        var failStore = Ext.create('Ext.data.Store', {
+            autoLoad: true,
+            fields: ['ljmc', 'status', 'tskg', 'yslx', 'message'],
+            data: result.fail
+        });
+        //store callback event listeners does not work
+        //修改默认显示信息
+        successStore.load({
+            callback: function (records, options, success) {
+                me.amount = result.success.length + result.fail.length;
+                me.success = result.success.length;
+                me.isContinue = result.result;
+                me.fail = result.fail.length;
+            }
         });
         Ext.apply(me, {
             items: [
@@ -113,7 +97,7 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                         items: [
                             {
                                 text: '继续',
-                                disabled: true,
+                                disabled: me.isContinue,
                                 handler: function () {
 
                                 }
@@ -121,7 +105,8 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                             }, {
                                 text: '取消',
                                 handler: function () {
-                                    Ext.getCmp('windowInfo').close();
+                                    var me = this;
+                                    me.up('window').close();
                                 }
                             }
                         ]
@@ -130,22 +115,107 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                         {
                             xtype: 'label',
                             margin: '0 0 0 0',
-                            html: '<div><img style="vertical-align: middle; width: 32px; height: 32px" src="resources/css/logic/smile-sad.png"><span style="color:black;font-size:14px;height:100px;vertical-align: middle"><b>&nbsp;&nbsp;共15项检查,以下2项有问题,需查看</b></span></div>',
+                            html: '<div>' +
+                            '<img style="vertical-align: middle; width: 32px; height: 32px" src=' + context.getLogicValidIcons("sad") + '>' +
+                            '<span style="color:black;font-size:14px;height:100px;vertical-align: middle">' +
+                            '<b>&nbsp;&nbsp;共' + me.amount + '项检查,以下' + me.fail + '项有问题,需查看</b></span></div>',
                         }, {
                             xtype: 'gridpanel',
-                            enableLocking: true,
                             id: 'fail-view',
-                            border: false,
                             margin: '8 0 0 0',
+                            border: false,
+                            cellWrap: true,
+                            rowLines: false,
+                            layout: 'anchor',
+                            disableSelection: true,
                             style: {
                                 background: 'white'
                             },
-                            width: 680
+                            viewConfig: {
+                                getRowClass: function (record) {
+                                    return 'style=""';
+                                }
+                            },
+                            store: failStore,
+                            columns: [
+                                {
+                                    header: '序号',
+                                    xtype: 'rownumberer',
+                                    flex: 0.2,
+                                    align: 'center',
+                                    sortable: false,
+                                    renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+                                        metaData.tdStyle = 'vertical-align: middle';
+                                        return '<div style="width: 18px; height: 18px;border-radius: 50%;font-size: 10px;padding-right:0px;color: #000;line-height: 18px;text-align: center;background: #fff;border: 1px solid black;">' + (rowIndex + 1) + '</div>'
+
+                                    }
+                                },
+                                {
+                                    text: '逻辑名称',
+                                    dataIndex: 'ljmc',
+                                    flex: 7,
+                                    renderer: function (value, metaData) {
+                                        metaData.tdStyle = 'vertical-align: middle';
+                                        return '<span style="color:black;font-size:14px;height:22px;vertical-align: middle">' + value + '</span>'
+                                    }
+                                }
+                                ,
+                                {
+                                    text: '结果',
+                                    dataIndex: 'status',
+                                    flex: 0.2,
+                                    renderer: function (value, metaData, record) {
+                                        //根据记录提示开关以及提示信息显示toolLip信息
+                                        if (record.data.tskg && record.data.message != '') {
+                                            metaData.tdCls = metaData.tdCls + 'errorToolTipCls'
+                                        }
+                                        metaData.tdStyle = 'vertical-align: middle';
+                                        if (record.data.tskg) {
+                                            return '<img  style="width: 22px; height: 22px" src=' + context.getLogicValidIcons('error') + ' />'
+
+                                        } else {
+                                            return '<img  style="width: 22px; height: 22px" src=' + context.getLogicValidIcons('warn') + ' />'
+                                        }
+                                    }
+                                }
+                            ],
+                            width: 680,
+                            hideHeaders: true,
+                            listeners: {
+                                //鼠标悬浮提示信息
+                                viewready: function (grid) {
+                                    var view = grid.view;
+                                    grid.mon(view, {
+                                        uievent: function (type, view, cell, recordIndex, cellIndex, e) {
+                                            grid.cellIndex = cellIndex;
+                                            grid.recordIndex = recordIndex;
+                                        }
+                                    });
+
+                                    grid.tip = Ext.create('Ext.tip.ToolTip', {
+                                        title: '<div><img style="vertical-align: middle; width: 16px; height: 16px" src=' + context.getLogicValidIcons("error") + ' /><span style="color:black;font-size:14px;height:100px;vertical-align: middle"><b>&nbsp;&nbsp;提示信息</b></span></div>',
+                                        target: view.getId(),
+                                        anchor: 'left',
+                                        delegate: '.errorToolTipCls',
+                                        trackMouse: true,
+                                        renderTo: Ext.getBody(),
+                                        listeners: {
+                                            beforeshow: function updateTipBody(tip) {
+                                                tip.update(grid.getStore().getAt(grid.recordIndex).data.message);
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
 
                         },
                         {
                             xtype: 'label',
-                            html: '<div><img style="vertical-align: middle; width: 32px; height: 32px" src="resources/css/logic/smile.png"><span style="color:black;font-size:14px;height:100px;vertical-align: middle"><b>&nbsp;&nbsp;以下13项没有问题</b></span></div>',
+                            html: '<div>' +
+                            '<img style="vertical-align: middle; width: 32px; height: 32px" src=' + context.getLogicValidIcons("smile") + '>' +
+                            '<span style="color:black;font-size:14px;height:100px;vertical-align: middle">' +
+                            '<b>&nbsp;&nbsp;以下' + me.success + '项没有问题</b></span></div>',
                         }, {
                             xtype: 'gridpanel',
                             id: 'success-view',
@@ -160,6 +230,7 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                                     return 'style=""';
                                 },
                                 listeners: {
+                                    //gridpanel group事件
                                     groupclick: function (view, node, group, e, eOpts) {
                                         var groupFeature = view.features[0];
                                         if (groupFeature.isExpanded(group)) {
@@ -170,62 +241,75 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                                     },
                                     groupexpand: function (view, node, group, e, eOpts) {
                                         node.children[0].className = "";
-                                        node.children[0].children[0].src = "resources/css/logic/bottom.png";
+                                        node.children[0].children[0].src = context.getLogicValidIcons('bottom');
                                     },
                                     groupcollapse: function (view, node, group, e, eOpts) {
                                         node.children[0].className = "";
-                                        node.children[0].children[0].src = "resources/css/logic/top.png";
+                                        node.children[0].children[0].src = context.getLogicValidIcons('top');
                                     }
                                 }
                             },
                             features: [Ext.create('Ext.grid.feature.Grouping', {
-                                    itemId: 'validGroup',
-                                    collapsible: false,
-                                    groupHeaderTpl: [
-                                        '界面约束类型检查共',
-                                        '{children.length}项',
-                                        '<img style="vertical-align: middle; margin-right: 6px; float: right;width: 16px; height: 16px" src="resources/css/logic/bottom.png" />'
-                                    ],
-                                }
+                                        itemId: 'validGroup',
+                                        collapsible: false,
+                                        groupHeaderTpl: [
+                                            '{name:this.formatName}检查共',
+                                            '{children.length}项',
+                                            '<img style="vertical-align: middle; margin-right: 8px; float: right;width: 16px; height: 16px" src=' + context.getLogicValidIcons('bottom') + ' />',
+                                            {
+                                                formatName: function (name) {
+                                                    for (var i = 0; i < yslxStore.data.length; i++) {
+                                                        var yslxObject = yslxStore.data.items[i].data;
+                                                        if (yslxObject.yslx == name) {
+                                                            return yslxObject.yslxmc;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
                             )],
                             style: {
                                 background: 'white'
                             }
                             ,
-                            store: Ext.data.StoreManager.lookup('simpsonsStore'),
+                            store: successStore,
                             columns: [
                                 {
-                                    header: '序号', xtype: 'rownumberer', flex: 0.2, align: 'center', sortable: false,
+                                    header: '序号',
+                                    xtype: 'rownumberer',
+                                    flex: 0.2,
+                                    align: 'center',
+                                    sortable: false,
                                     renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
-                                        return '<div style="width: 16px; height: 16px;border-radius: 50%;font-size: 10px;color: #fff; margin-right: 0px;line-height: 16px;text-align: center;background: #000">' + (rowIndex + 1) + '</div>'
+                                        metaData.tdStyle = 'vertical-align: middle';
+                                        return '<div style="width: 18px; height: 18px;border-radius: 50%;font-size: 10px;padding-right:0px;color: #000;line-height: 18px;text-align: center;background: #fff;border: 1px solid black;">' + (rowIndex + 1) + '</div>'
 
                                     }
                                 },
                                 {
-                                    text: 'Name',
-                                    dataIndex: 'name',
+                                    text: '逻辑名称',
+                                    dataIndex: 'ljmc',
                                     flex: 7,
-                                    align: 'left',
-                                    renderer: function (value) {
+                                    renderer: function (value, metaData) {
+                                        metaData.tdStyle = 'vertical-align: middle';
                                         return '<span style="color:black;font-size:14px;height:22px;vertical-align: middle">' + value + '</span>'
                                     }
                                 }
                                 ,
                                 {
-                                    text: 'Phone',
-                                    dataIndex: 'phone',
+                                    text: '结果',
+                                    dataIndex: 'status',
                                     flex: 0.2,
-                                    cls: 'tipCls',
-                                    tdCls: 'toolTipCls',
-                                    renderer: function (value) {
-                                        if (value == -1) {
-                                            return '<img style="width: 22px; height: 22px" src="resources/css/logic/right.png" />'
+                                    renderer: function (value, metaData, record) {
+                                        if (record.data.tskg && record.data.message != '') {
+                                            metaData.tdCls = metaData.tdCls + 'successToolTipCls'
                                         }
-                                        if (value % 2 == 1) {
-                                            return '<img  style="width: 22px; height: 22px" src="resources/css/logic/warn.png" />'
-
+                                        metaData.tdStyle = 'vertical-align: middle';
+                                        if (value) {
+                                            return '<img style="width: 22px; height: 22px" src=' + context.getLogicValidIcons('right') + ' />'
                                         } else {
-                                            return '<img  style="width: 22px; height: 22px" src="resources/css/logic/error.png" />'
+                                            return '<img  style="width: 22px; height: 22px" src=' + context.getLogicValidIcons('error') + ' />'
                                         }
                                     }
                                 }
@@ -233,6 +317,7 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                             width: 680,
                             hideHeaders: true,
                             listeners: {
+                                //鼠标悬浮提示信息
                                 viewready: function (grid) {
                                     var view = grid.view;
                                     grid.mon(view, {
@@ -243,10 +328,10 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
                                     });
 
                                     grid.tip = Ext.create('Ext.tip.ToolTip', {
-                                        title: '<div><img style="vertical-align: middle; width: 16px; height: 16px" src="resources/css/logic/error.png"/><span style="color:black;font-size:14px;height:100px;vertical-align: middle"><b>&nbsp;&nbsp;提示信息</b></span></div>',
+                                        title: '<div><img style="vertical-align: middle; width: 16px; height: 16px" src=' + context.getLogicValidIcons("error") + ' /><span style="color:black;font-size:14px;height:100px;vertical-align: middle"><b>&nbsp;&nbsp;提示信息</b></span></div>',
                                         target: view.getId(),
                                         anchor: 'left',
-                                        delegate: '.toolTipCls',
+                                        delegate: '.successToolTipCls',
                                         trackMouse: true,
                                         renderTo: Ext.getBody(),
                                         listeners: {
