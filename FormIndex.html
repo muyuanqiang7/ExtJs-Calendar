@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="resources/css/extJs/ext-theme-crisp-all.css"/>
+
+    <!-- GC -->
+    <script type="text/javascript" src="./src/extJs/ext-all-debug.js"></script>
+    <script type="text/javascript" src="LandFormBaseInfo.js"></script>
+    <script type="text/javascript" src="./widget/NoBorderTextField.js"></script>
+    <script type="text/javascript" src="./widget/UnderlineTextField.js"></script>
+</head>
+<style type="text/css">
+    .x-body {
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale
+    }
+
+    #loading {
+        position: absolute;
+        top: 50%;
+        width: 98%;
+        margin-top: -70px
+    }
+
+    #loading .title {
+        font-family: "Exo", sans-serif;
+        font-size: 2em;
+        color: gray;
+        text-align: center;
+        white-space: nowrap;
+        display: block;
+        line-height: 17px;
+        font-weight: 300;
+    }
+
+    #loading .lol {
+        background: url(<c:url value= "/app/platform/ccs/img/loading.gif" />) no-repeat center;
+        display: block;
+        height: 120px
+    }
+</style>
+<script>
+    Ext.onReady(function () {
+        Ext.create('landformbaseinfo', {
+            //Ext.getBody().dom == document.body;
+            width: 900,
+            height: 700,
+            renderTo: Ext.getBody(),
+        });
+
+    });
+</script>
+<body class="x-body">
+
+</body>
+</html>

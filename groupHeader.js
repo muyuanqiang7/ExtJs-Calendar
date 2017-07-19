@@ -2,10 +2,10 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
     extend: 'Ext.window.Window',
     xtype: 'fileCategoryManage-categoryEditTabFive',
     border: true,
-    width: 1200,
+    width: 900,
     height: 600,
     title: '设置档案权限',
-    requires: [],
+    requires: ['CheckboxGroupingFeature'],
     initComponent: function (config) {
         var me = this;
         var jsonstore = new Ext.data.JsonStore({
@@ -13,31 +13,28 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                 {
                     id: 1,
                     funiusername: '张三',
-                    qxyl: '查询',
+                    qxyl: '禁止访问',
                     jzfw: true,
                     kdx: false,
                     jcy: false,
-                    zdy: true,
                     orgName: '档案管理小组'
                 },
                 {
                     id: 2,
                     funiusername: '李四',
-                    qxyl: '禁止访问',
+                    qxyl: '可读写',
                     jzfw: false,
                     kdx: true,
-                    jcy: true,
-                    zdy: false,
+                    jcy: false,
                     orgName: '档案管理小组'
                 },
                 {
                     id: 3,
                     funiusername: '王五',
-                    qxyl: '仅查阅',
+                    qxyl: '可读写',
                     jzfw: false,
-                    kdx: false,
+                    kdx: true,
                     jcy: false,
-                    zdy: false,
                     orgName: '档案管理小组'
                 }, {
                     id: 4,
@@ -45,8 +42,7 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                     qxyl: '仅查阅',
                     jzfw: false,
                     kdx: false,
-                    jcy: false,
-                    zdy: false,
+                    jcy: true,
                     orgName: '档案归集小组'
                 }
             ],
@@ -68,35 +64,15 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                     //    checkOnly: true // for prevent clicked grid row and canceled all check box checked status
                     //}),
                     multiColumnSort: true,
-                    features: [Ext.create('Ext.grid.feature.Grouping', {
-                            itemId: 'validGroup',
-                            collapsible: false,
-                            groupHeaderTpl: [
-                                '<div style="display:inline-block;width: 100%;height: 100%"><div style="float: left; width: 16.65%;height: 100%;vertical-align: middle;text-align: center">{name}</div><div style="float: left; width: 16.66%;text-align: center">仅查阅</div><div style="float: left;width: 16.66%;text-align: center"><input class="forbid" type="checkbox" ></div><div style="float: left;width: 16.66%;text-align: center"><input class="readWrite" type="checkbox" ></div><div style="float: left;width: 16.66%;text-align: center"> <input class="readOnly" type="checkbox" ></div><div style="float: left;width: 16.70%;text-align: center"> <input class="custom" type="checkbox" ></div></div>'
-                            ]
-                        }
-                    )],
+                    features: [{
+                        ftype: 'checkboxGrouping',
+                        enableGroupingMenu: false,
+                        collapsible: true,
+                        //hideGroupHeader: true,
+                        //startCollapsed: true // produces strange bug
+                    }],
                     viewConfig: {
                         enableTextSelection: true,
-                    },
-                    listeners: {
-                        //gridPanel 分组被点击事件
-                        groupclick: function (view, node, group, e, eOpts) {
-                            if (e.target.className) {
-                                var elements = node.querySelectorAll('input.' + e.target.className);
-                                if (elements) {
-                                    Ext.Array.each(elements, function (item) {
-                                        if (item.checked) {
-                                            console.log("true");
-                                            item.setAttribute("checked", "checked");
-                                        } else {
-                                            console.log("false");
-                                            item.removeAttribute("checked");
-                                        }
-                                    });
-                                }
-                            }
-                        }
                     },
                     columnLines: true,
                     columns: [
@@ -105,10 +81,11 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                         {
                             text: '禁止访问',
                             align: 'center',
+                            //xtype: 'checkcolumn',
                             flex: 1,
                             dataIndex: 'jzfw',
                             renderer: function (data, metadata, record, rowIndex, columnIndex, store) {
-                                var str = '<input type="checkbox"  name="jzfw" checked>';
+                                var str = '<input type="checkbox" class="jzfw" name="jzfw" checked>';
                                 if (data) {
                                     return str
                                 } else {
@@ -119,10 +96,11 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                         {
                             text: '可读写',
                             align: 'center',
+                            //xtype: 'checkcolumn',
                             flex: 1,
                             dataIndex: 'kdx',
                             renderer: function (data, metadata, record, rowIndex, columnIndex, store) {
-                                var str = '<input type="checkbox"  name="kdx" checked>';
+                                var str = '<input type="checkbox" class="kdx" name="kdx" checked>';
                                 if (data) {
                                     return str
                                 } else {
@@ -133,37 +111,67 @@ Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManag
                         {
                             text: '仅查阅',
                             align: 'center',
+                            //xtype: 'checkcolumn',
                             flex: 1,
                             dataIndex: 'jcy',
                             renderer: function (data, metadata, record, rowIndex, columnIndex, store) {
-                                var str = '<input type="checkbox"  name="jcy" checked>';
+                                var str = '<input type="checkbox"  class="jcy" name="jcy" checked>';
                                 if (data) {
                                     return str
                                 } else {
                                     return me._regxReplace(str, 'checked');
                                 }
                             }
-                        },
-                        {
-                            text: '自定义', align: 'center',
-                            flex: 1,
-                            dataIndex: 'zdy',
-                            renderer: function (data, metadata, record, rowIndex, columnIndex, store) {
-                                var str = '<input type="checkbox"  name="zdy" checked>';
-                                if (data) {
-                                    return str
-                                } else {
-                                    return me._regxReplace(str, 'checked');
+                        }
+                    ],
+                    listeners: {
+                        cellclick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+                            var className = e.target.className;
+                            if (className) {
+                                var target = td.querySelector('input.' + className);
+                                if (target) {
+                                    //触发store update事件
+                                    record.beginEdit();
+                                    record.data[className] = target.checked;
+                                    if (target.checked) {
+                                        me._updateMutexColumn(record, me._getDifferentClassName(className), !target.checked);
+                                        record.data['qxyl'] = me._getPermissionPreview(className);
+                                    } else {
+                                        record.data['qxyl'] = '';
+                                    }
+
+                                    record.endEdit();
                                 }
                             }
-                        },
-                    ]
+                        }
+                    }
                 }
             ]
         });
         this.callParent(arguments);
     },
+    //替换字符串regx为 ""
     _regxReplace: function (source, regx) {
         return source.replace(regx, "");
+    },
+    //获取权限预览显示
+    _getPermissionPreview: function (permissionName) {
+        var permission = {'jzfw': '禁止访问', 'kdx': '可读写', 'jcy': '仅查阅'}
+        return permission[permissionName];
+    },
+    // 获取不同列class差异
+    _getDifferentClassName: function (className) {
+        var classArray = ['jzfw', 'kdx', 'jcy'];
+        var index = classArray.indexOf(className);
+        if (index > -1) {
+            classArray.splice(index, 1);
+        }
+        return classArray;
+    },
+    //更改互斥列数据
+    _updateMutexColumn: function (record, columns, checked) {
+        for (var i = 0; i < columns.length; i++) {
+            record.data[columns[i]] = checked;
+        }
     }
 });
