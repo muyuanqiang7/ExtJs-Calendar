@@ -8,6 +8,7 @@
     <!-- GC -->
     <script type="text/javascript" src="./src/extJs/ext-all-debug.js"></script>
     <script type="text/javascript" src="LandFormBaseInfo.js"></script>
+    <script type="text/javascript" src="LandOwnershipForm.js"></script>
     <script type="text/javascript" src="./widget/NoBorderTextField.js"></script>
     <script type="text/javascript" src="./widget/UnderlineTextField.js"></script>
 </head>
@@ -45,10 +46,27 @@
 <script>
     Ext.onReady(function () {
         Ext.create('landformbaseinfo', {
+            id: 'landInfoPanel',
             //Ext.getBody().dom == document.body;
             width: 900,
             height: 700,
+            renderTo: Ext.getBody()
+        });
+        new Ext.Button({
+            //Ext.getBody().dom == document.body;
             renderTo: Ext.getBody(),
+            text: "show",
+            minWidth: 100,
+            handler: function () {
+                console.log(Ext.getCmp('landInfoPanel').down('form').getValues());
+            }
+        });
+        Ext.create('landownershipform', {
+            id: 'landOwnerShipPanel',
+            //Ext.getBody().dom == document.body;
+            width: 900,
+            height: 700,
+            renderTo: Ext.getBody()
         });
 
     });
