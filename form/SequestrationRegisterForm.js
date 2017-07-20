@@ -1,8 +1,8 @@
-//登记申请表
-Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
+//查封登记信息
+Ext.define('app.platform.archives.view.itemPages.SequestrationRegisterForm', {
     extend: 'Ext.panel.Panel',
-    xtype: 'landownershipform',
-    alias: 'landownershipform',
+    xtype: 'sequestrationregisterform',
+    alias: 'sequestrationregisterform',
     autoScroll: true,
     margin: '0 0 0 0',
     layout: {
@@ -68,7 +68,7 @@ Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
                     style: {
                         margin: 'auto auto'
                     },
-                    value: '<span style="color:black;font-size:16px;height:100px;"><b>土地所有权等级信息</b></span>'
+                    value: '<span style="color:black;font-size:16px;height:100px;"><b>查封登记信息</b></span>'
                 }, {
                     xtype: 'panel',
                     colspan: 5,
@@ -90,223 +90,215 @@ Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
                             allowBlank: me.isReadOnly,
                             disabled: me.isReadOnly,
                             readOnly: me.isReadOnly,
-                            width: 340
-                        }, {
-                            xtype: 'checkboxgroup',
-                            defaults: {
-                                name: 'chk_group',
-                                listeners: {
-                                    scope: this,
-                                    change: function (chkbox) {
-                                        if (chkbox.checked) {
-                                            me.resetBoxes(chkbox.ownerCt, chkbox.inputValue);
-                                        }
-                                    }
-                                }
-                            },
-                            layout: {
-                                type: 'hbox',
-                                // pack: 'end',
-                                // align: 'stretch'
-                            },
-                            items: [{
-                                xtype: 'displayfield',
-                                value: '单位:',
-                            }, {
-                                boxLabel: '平方米',
-                                // margin: '0 10 0 0',
-                                checked: false,
-                                name: 'area',
-                                inputValue: 1
-                            }, {
-                                boxLabel: '公顷',
-                                // margin: '0 0 0 5',
-                                name: 'area',
-                                inputValue: 2
-                            }, {
-                                boxLabel: '亩',
-                                // margin: '0 0 0 5',
-                                name: 'area',
-                                inputValue: 3
-                            }, {
-                                xtype: 'displayfield',
-                                value: '、万元',
-                            }]
+                            width: 340,
                         }]
                 }, {
                     xtype: 'displayfield',
+                    width: 120,
                     value: '业务号<span style="color:red">*</span>',
-                    colspan: 1,
+                    colspan: 2,
                 }, {
                     xtype: 'nobordertextfield',
                     name: 'ywh',
-                    colspan: 4,
+                    colspan: 3,
                     allowBlank: me.isReadOnly,
                     disabled: me.isReadOnly,
                     readOnly: me.isReadOnly,
                 }, {
                     xtype: 'displayfield',
-                    value: '权利人',
-                    colspan: 1,
+                    value: '查封机关',
+                    colspan: 2,
+                    width: 120,
                 }, {
                     xtype: 'nobordertextfield',
                     name: 'ywh',
-                    colspan: 4,
+                    colspan: 3,
                     disabled: me.isReadOnly,
                     readOnly: me.isReadOnly,
                 }, {
                     xtype: 'displayfield',
-                    value: '证件种类',
-                    colspan: 1,
+                    value: '查封类型',
+                    colspan: 2,
+                    width: 120,
                 }, {
                     xtype: 'nobordertextfield',
                     name: 'ywh',
-                    colspan: 4,
+                    colspan: 3,
                     disabled: me.isReadOnly,
                     readOnly: me.isReadOnly,
                 }, {
                     xtype: 'displayfield',
-                    value: '证件号',
-                    colspan: 1,
+                    value: '查封文件',
+                    width: 120,
+                    colspan: 2,
                 }, {
                     xtype: 'nobordertextfield',
                     readOnly: me.isReadOnly,
                     name: 'zjh',
                     width: '100%',
-                    colspan: 4
+                    colspan: 3
                 }, {
                     xtype: 'displayfield',
-                    value: '共有情况',
-                    colspan: 1,
+                    value: '查封文号',
+                    width: 120,
+                    colspan: 2,
                 }, {
                     xtype: 'nobordertextfield',
                     readOnly: me.isReadOnly,
                     name: 'zjh',
                     width: '100%',
-                    colspan: 4
+                    colspan: 3
                 }, {
                     xtype: 'displayfield',
-                    value: '登记类型',
-                    colspan: 1,
+                    value: '查封期限',
+                    width: 120,
+                    colspan: 2,
                 }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    width: '100%',
-                    colspan: 4
-                }, {
-                    xtype: 'displayfield',
-                    value: '登记原因',
-                    colspan: 1,
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    width: '100%',
-                    colspan: 4
-                }, {
-                    xtype: 'displayfield',
-                    value: '分类面积',
-                    width: 20,
-                    rowspan: 7,
-                }, {
-                    xtype: 'displayfield',
-                    value: '农用地',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 4,
-                }, {
-                    xtype: 'displayfield',
-                    value: '其中',
-                    colspan: 1,
-                    rowspan: 4
-                }, {
-                    xtype: 'displayfield',
-                    value: '耕地',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 5
+                    xtype: 'panel',
+                    colspan: 3,
+                    margin: '0 0 0 0',
+                    border: false,
+                    layout: {
+                        type: 'hbox',
+                        pack: 'end',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        xtype: 'nobordertextfield',
+                        readOnly: me.isReadOnly,
+                        name: 'zjh',
+                        width: '40%',
+                    }, {
+                        xtype: 'displayfield',
+                        readOnly: true,
+                        border: false,
+                        value: '起',
+                        width: 40,
+                    }, {
+                        xtype: 'nobordertextfield',
+                        readOnly: me.isReadOnly,
+                        name: 'zjh',
+                        width: '40%',
+                    }, {
+                        xtype: 'displayfield',
+                        readOnly: true,
+                        border: false,
+                        value: '止',
+                        width: 40,
+                    }]
                 }, {
                     xtype: 'displayfield',
-                    value: '林地',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 5
-                }, {
-                    xtype: 'displayfield',
-                    value: '草地',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 5
-                }, {
-                    xtype: 'displayfield',
-                    value: '其他',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 5
-                }, {
-                    xtype: 'displayfield',
-                    value: '建设用地',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 4
-                }, {
-                    xtype: 'displayfield',
-                    value: '未利用地',
-                }, {
-                    xtype: 'nobordertextfield',
-                    readOnly: me.isReadOnly,
-                    name: 'zjh',
-                    colspan: 4
-                }, {
-                    xtype: 'displayfield',
-                    value: '不动产权证书号<span style="color:red">*</span>',
-                    colspan: 1,
+                    value: '查封范围',
+                    width: 120,
+                    colspan: 2,
                 }, {
                     xtype: 'nobordertextfield',
                     name: 'ywh',
-                    colspan: 4,
+                    colspan: 3,
+                    allowBlank: me.isReadOnly,
+                    disabled: me.isReadOnly,
+                    readOnly: me.isReadOnly,
+                }, {
+                    xtype: 'displayfield',
+                    value: '登记时间',
+                    width: 120,
+                    colspan: 2,
+                }, {
+                    xtype: 'nobordertextfield',
+                    name: 'ywh',
+                    colspan: 3,
+                    allowBlank: me.isReadOnly,
+                    disabled: me.isReadOnly,
+                    readOnly: me.isReadOnly,
+                }, {
+                    xtype: 'displayfield',
+                    value: '登簿人',
+                    width: 120,
+                    colspan: 2,
+                }, {
+                    xtype: 'nobordertextfield',
+                    name: 'ywh',
+                    colspan: 3,
+                    allowBlank: me.isReadOnly,
+                    disabled: me.isReadOnly,
+                    readOnly: me.isReadOnly,
+                }, {
+                    xtype: 'displayfield',
+                    value: '解封业务号',
+                    width: 120,
+                    colspan: 2,
+                }, {
+                    xtype: 'nobordertextfield',
+                    name: 'ywh',
+                    colspan: 3,
+                    allowBlank: me.isReadOnly,
+                    disabled: me.isReadOnly,
+                    readOnly: me.isReadOnly,
+                }, {
+                    xtype: 'displayfield',
+                    value: '解封机关',
+                    width: 120,
+                    colspan: 2,
+                }, {
+                    xtype: 'nobordertextfield',
+                    name: 'ywh',
+                    colspan: 3,
+                    allowBlank: me.isReadOnly,
+                    disabled: me.isReadOnly,
+                    readOnly: me.isReadOnly,
+                }, {
+                    xtype: 'displayfield',
+                    value: '解封文件',
+                    width: 120,
+                    colspan: 2,
+                }, {
+                    xtype: 'nobordertextfield',
+                    name: 'ywh',
+                    colspan: 3,
+                    allowBlank: me.isReadOnly,
+                    disabled: me.isReadOnly,
+                    readOnly: me.isReadOnly,
+                }, {
+                    xtype: 'displayfield',
+                    value: '解封文号',
+                    width: 120,
+                    colspan: 2,
+                }, {
+                    xtype: 'nobordertextfield',
+                    name: 'ywh',
+                    colspan: 3,
                     allowBlank: me.isReadOnly,
                     disabled: me.isReadOnly,
                     readOnly: me.isReadOnly,
                 }, {
                     xtype: 'displayfield',
                     value: '登记时间<span style="color:red">*</span>',
-                    colspan: 1,
+                    width: 120,
+                    colspan: 2,
                 }, {
                     xtype: 'nobordertextfield',
                     name: 'ywh',
-                    colspan: 4,
+                    colspan: 3,
                     allowBlank: me.isReadOnly,
                     disabled: me.isReadOnly,
                     readOnly: me.isReadOnly,
                 }, {
                     xtype: 'displayfield',
                     value: '登簿人<span style="color:red">*</span>',
-                    colspan: 1,
+                    width: 120,
+                    colspan: 2,
                 }, {
                     xtype: 'nobordertextfield',
                     name: 'ywh',
-                    colspan: 4,
+                    colspan: 3,
                     allowBlank: me.isReadOnly,
                     disabled: me.isReadOnly,
                     readOnly: me.isReadOnly,
                 }, {
                     xtype: 'displayfield',
+
                     value: '附记',
-                    width: 80,
+                    width: 120,
                     rowspan: 1,
                 }, {
                     xtype: 'textareafield',
@@ -317,7 +309,7 @@ Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
                     fieldStyle: 'background:none',
                     labelWidth: 0,
                     width: '100%',
-                    colspan: 5,
+                    colspan: 4,
                 }
                 ]
             }
@@ -340,8 +332,8 @@ Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
             var titleForm = me.down("#titleForm");
             var aWeek = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
             var nowTime = ''
-                + Ext.Date.format(new Date(), 'Y-m-d') + ' '
-                + aWeek[new Date().getDay()];
+                    + Ext.Date.format(new Date(), 'Y-m-d') + ' '
+                    + aWeek[new Date().getDay()];
             var titleRecord = Ext.create('Ext.data.Record', {
                 sjrmc: Ext.appContext.userInfo.name,
                 slrq: nowTime

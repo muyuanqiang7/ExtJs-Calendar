@@ -1,4 +1,4 @@
-//登记申请表
+//宗地基本信息
 Ext.define('app.platform.archives.view.itemPages.LandBaseInfoForm', {
     extend: 'Ext.panel.Panel',
     xtype: 'landformbaseinfo',
@@ -81,7 +81,7 @@ Ext.define('app.platform.archives.view.itemPages.LandBaseInfoForm', {
                     items: [
                         {
                             xtype: 'displayfield',
-                            value: '宗地代码<span style="color:red">*</span>:',
+                            value: '宗地代码<span style="color:red">*</span>',
                         },
                         {
                             xtype: 'nobordertextfield',
@@ -90,7 +90,8 @@ Ext.define('app.platform.archives.view.itemPages.LandBaseInfoForm', {
                             disabled: me.isReadOnly,
                             readOnly: me.isReadOnly,
                             width: 340
-                        }, {
+                        },
+                        {
                             xtype: 'checkboxgroup',
                             defaults: {
                                 name: 'chk_group',
@@ -434,8 +435,8 @@ Ext.define('app.platform.archives.view.itemPages.LandBaseInfoForm', {
             var titleForm = me.down("#titleForm");
             var aWeek = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
             var nowTime = ''
-                + Ext.Date.format(new Date(), 'Y-m-d') + ' '
-                + aWeek[new Date().getDay()];
+                    + Ext.Date.format(new Date(), 'Y-m-d') + ' '
+                    + aWeek[new Date().getDay()];
             var titleRecord = Ext.create('Ext.data.Record', {
                 sjrmc: Ext.appContext.userInfo.name,
                 slrq: nowTime
