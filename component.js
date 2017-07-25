@@ -89,7 +89,7 @@ Ext.define('app.platform.estate.view.register.sysconfig.businesslogic.RegiBusine
                 itemId: 'ljmcItemId',
                 bind: '{ljmc}',
                 style: style,
-                hidden: true,
+                hidden: false,
                 readOnly: editor,
                 listeners: {
                     afterrender: function (field) {
@@ -101,9 +101,16 @@ Ext.define('app.platform.estate.view.register.sysconfig.businesslogic.RegiBusine
             }, {
                 xtype: 'label',
                 columnWidth: 0.05,
-                hidden: true,
+                hidden: false,
                 style: styleForSpan,
-                html: '<span style="color: red;">*</span>'
+                html: '<span style="color: red;">*</span>',
+                listeners: {
+                    render: function (c) {
+                        c.getEl().on('click', function () {
+                            console.log(this.prev().next());
+                        }, c);
+                    }
+                }
             }, {
                 fieldLabel: '方法名称',
                 xtype: 'textfield',
@@ -122,10 +129,7 @@ Ext.define('app.platform.estate.view.register.sysconfig.businesslogic.RegiBusine
                 html: '<span style="color: red">*</span>'
             }, {
                 fieldLabel: '类型',
-                style: {
-                    marginBottom: '4px',
-                    paddingLeft: '10px'
-                },
+                style: style,
                 xtype: 'combobox',
                 columnWidth: 0.45,
                 allowBlank: false,//不允许为空
@@ -156,7 +160,7 @@ Ext.define('app.platform.estate.view.register.sysconfig.businesslogic.RegiBusine
                 xtype: 'label',
                 columnWidth: 0.05,
                 style: styleForSpan,
-                html: '&nbsp'
+                html: '&nbsp;&nbsp;'
             }, {
                 fieldLabel: '约束类型',
                 xtype: 'combobox',
@@ -220,7 +224,7 @@ Ext.define('app.platform.estate.view.register.sysconfig.businesslogic.RegiBusine
                 xtype: 'label',
                 columnWidth: 0.05,
                 style: styleForSpan,
-                html: '&nbsp'
+                html: '&nbsp;&nbsp;&nbsp;&nbsp;'
             }, {
                 fieldLabel: '描述',
                 xtype: 'textfield',
@@ -233,7 +237,7 @@ Ext.define('app.platform.estate.view.register.sysconfig.businesslogic.RegiBusine
                 xtype: 'label',
                 columnWidth: 0.05,
                 style: styleForSpan,
-                html: '&nbsp'
+                html: '&nbsp;'
             }, {
                 fieldLabel: '是否启动',
                 style: style,
