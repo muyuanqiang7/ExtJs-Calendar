@@ -1,4 +1,4 @@
-Ext.define('CheckboxGroupingFeature', {
+Ext.define('app.platform.archives.view.lijiao.systemaintenance.fileCategoryManage.CheckboxGroupingFeature', {
     extend: 'Ext.grid.feature.Grouping',
     alias: 'feature.checkboxGrouping',
 
@@ -14,7 +14,7 @@ Ext.define('CheckboxGroupingFeature', {
     updatingRecords: false,
 
     constructor: function (config) {
-        config.groupHeaderTpl = ['<table style="width: 100%;height: 100%;margin: auto 0"><tr style="width: 100%;height: 100%"><td style="float: left; width: 18.41%;height: 100%;vertical-align: middle;text-align: center">{name}</td><td style="float: left; width: 20.21%;text-align: center">{[values.record.get("' + this.qxyl + '") ? values.record.get("' + this.qxyl + '") : ""]}</td><td style="float: left;width: 20.51%;text-align: center"><input style="margin-left: 5px" class="jzfw" type="checkbox" {[values.record.get("' + this.jzfw + '") ? "checked" : ""]}></td><td style="float: left;width: 20.53%;text-align: center"><input style="margin-left: 5px" class="kdx" type="checkbox" {[values.record.get("' + this.kdx + '") ? "checked" : ""]} ></td><td style="float: left;width: 19.04%;text-align: center"> <input style="margin-left: 22px" class="jcy" type="checkbox" {[values.record.get("' + this.jcy + '") ? "checked" : ""]}></td></tr></table>'
+        config.groupHeaderTpl = ['<table style="width: 100%;height: 100%;margin: auto 0"><tr style="width: 100%;height: 100%"><td style="float: left; width: 18.41%;height: 100%;vertical-align: middle;text-align: center">{name}</td><td style="float: left; width: 20.21%;text-align: center">{[values.record.get("' + this.qxyl + '") ? values.record.get("' + this.qxyl + '") : ""]}</td><td style="float: left;width: 20.21%;text-align: center"><input style="margin-left: 7px" class="jzfw" type="checkbox" {[values.record.get("' + this.jzfw + '") ? "checked" : ""]}></td><td style="float: left;width: 20.53%;text-align: center"><input style="margin-left: 14px" class="kdx" type="checkbox" {[values.record.get("' + this.kdx + '") ? "checked" : ""]} ></td><td style="float: left;width: 19.04%;text-align: center"> <input style="margin-left: 26px" class="jcy" type="checkbox" {[values.record.get("' + this.jcy + '") ? "checked" : ""]}></td></tr></table>'
         ];
         this.callParent(arguments);
     },
@@ -23,7 +23,7 @@ Ext.define('CheckboxGroupingFeature', {
         var store = grid.getStore();
         if (store) {
             store.on('update', this.onStoreUpdate, this);
-            store.on('load', this.onStoreLoad, this);
+            // store.on('load', this.onStoreLoad, this);
         }
         this.callParent(arguments);
     },
@@ -63,7 +63,7 @@ Ext.define('CheckboxGroupingFeature', {
                         for (var i = 0; i < modifiedFieldNames.length; i++) {
                             var updateField = modifiedFieldNames[i];
                             groupRec.each(function (rec) {
-                                allChecked = rec.get(updateField);
+                                allChecked = rec.get(updateField) == "1";
                                 groupName = rec.get(groupField);
                                 if (allChecked === false) {
                                     return false;
@@ -136,7 +136,7 @@ Ext.define('CheckboxGroupingFeature', {
         }
     },
     onStoreLoad: function (store, records, successful, eOpts) {
-        console.log("store load");
+        this.refreshView("");
     },
     _getDifferentClassName: function (className) {
         var classArray = ['jzfw', 'kdx', 'jcy'];
@@ -164,13 +164,13 @@ Ext.define('CheckboxGroupingFeature', {
                         var differenceClassNames = this._getDifferentClassName(className);
                         if (checked) {
                             for (var i = 0; i < differenceClassNames.length; i++) {
-                                rec.set(differenceClassNames[i], !checked);
+                                rec.set(differenceClassNames[i], !checked ? "1" : "0");
                             }
                             rec.set('qxyl', this.getPermissionPreview(className));
                         } else {
                             rec.set('qxyl', '');
                         }
-                        rec.set(className, checked);
+                        rec.set(className, checked ? "1" : "0");
                         rec.endEdit(true);
                     }, this);
                     this.updatingRecords = false;
