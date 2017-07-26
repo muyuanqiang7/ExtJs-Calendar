@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>ExtJs with Font Awesome</title>
+    <!-- font awesome -->
+    <link rel="stylesheet" type="text/css" href="../resources/font-awesome-4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+    <!-- ExtJs -->
+    <script type="text/javascript" src="extJs/ext-all-debug.js"></script>
 </head>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        console.log("Ext.onReady");
+        Ext.create('Ext.Button', {
+            text: 'Click me',
+            glyph: 'xf0c2@FontAwesome',
+            renderTo: Ext.getBody(),
+            handler: function () {
+                Ext.Msg.alert("Message", "you click button")
+            }
+        })
+    });
+</script>
 <body>
 
 </body>
