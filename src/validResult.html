@@ -9,11 +9,21 @@
 
     <!-- GC -->
     <script type="text/javascript" src="extJs/ext-all-debug.js"></script>
+    <script type="text/javascript" src="result.js"></script>
     <script type="text/javascript">
         Ext.onReady(function () {
+            var _button = new Ext.Button({
+                //Ext.getBody().dom == document.body;
+                renderTo: Ext.getBody(),
+                text: "show",
+                minWidth: 100,
+                handler: function () {
+                    var regiTypesEdit = Ext.create("app.platform.estate.view.register.regiconfig.businesslogicconfig.RegiBusinessLogicValidResult", {});
+                    regiTypesEdit.show();
+                }
+            });
 
         });
-
     </script>
     <style>
 
