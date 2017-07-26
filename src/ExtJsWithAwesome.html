@@ -10,11 +10,17 @@
     <script type="text/javascript" src="extJs/ext-all-debug.js"></script>
 </head>
 <script type="text/javascript">
+    Ext.application({
+        name: 'app',
+        launch: function () {
+            Ext.setGlyphFontFamily("FontAwesome")
+        }
+
+    });
     Ext.onReady(function () {
-        console.log("Ext.onReady");
         Ext.create('Ext.Button', {
             text: 'Click me',
-            glyph: 'xf0c2@FontAwesome',
+            glyph: 0xf0c2,
             renderTo: Ext.getBody(),
             handler: function () {
                 Ext.Msg.alert("Message", "you click button")
