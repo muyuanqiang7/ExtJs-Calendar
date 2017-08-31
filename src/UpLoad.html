@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UpLoad</title>
+    <!-- font awesome -->
+    <link rel="stylesheet" type="text/css" href="../resources/font-awesome-4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../extjs-upload-widget/lib/upload/css/upload.css"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+    <!-- ExtJs -->
+    <script type="text/javascript" src="extJs/ext-all-debug.js"></script>
+</head>
+<script type="text/javascript">
+    Ext.Loader.setConfig({
+        enabled: true,
+        paths: {//'类名前缀':'所在路径'
+            'Ext.ux.upload': '../extjs-upload-widget/lib/upload'
+        }
+    });
+    Ext.application({
+        name: 'app',
+        requires: [
+            'Ext.ux.upload.Dialog'
+        ],
+        launch: function () {
+            Ext.setGlyphFontFamily("FontAwesome");
+            var panel = Ext.create('Ext.panel.Panel', {
+                renderTo: document.body,
+                height: 900,
+                width: 1200,
+                title: 'Foo',
+                titleAlign: 'center',
+                items: [{
+                    xtype: 'button',
+                    text: 'click me',
+                    glyph: 0xf02d,
+                    renderTo: panel,
+                    handler: function () {
+                        var dialog = Ext.create('Ext.ux.upload.Dialog', {
+                            dialogTitle: 'My Upload Widget',
+                            uploadUrl: 'upload.php'
+                        });
+
+                        dialog.show();
+                    }
+                }]
+            });
+        }
+
+    });
+</script>
+<body>
+
+</body>
+</html>

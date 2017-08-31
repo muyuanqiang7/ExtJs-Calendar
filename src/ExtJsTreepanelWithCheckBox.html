@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExtJsTreePanel</title>
+    <!-- font awesome -->
+    <link rel="stylesheet" type="text/css" href="../resources/font-awesome-4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+    <!-- ExtJs -->
+    <script type="text/javascript" src="extJs/ext-all-debug.js"></script>
+</head>
+<script type="text/javascript">
+    Ext.application({
+        name: 'app',
+        launch: function () {
+            Ext.setGlyphFontFamily("FontAwesome")
+        }
+
+    });
+    Ext.onReady(function () {
+        /** 递归遍历父节点 **/
+        var travelParentChecked = function (node, checkStatus, opts) {
+            //父节点
+            var upNode = node.parentNode;
+            if (upNode != null) {
+                var opts = {};
+                opts["isPassive"] = true;
+                //父节点当前选中状态
+                var upChecked = upNode.data.checked;
+
+                //选中状态，遍历父节点，判断有父节点下的子节点是否都全选
+                if (checkStatus) {
+                    var allChecked = true;
+                    //此时父节点不可能是选中状态
+                    //如果有一个节点未选中，可以判断，当前父节点肯定是未选中状态，所以此时不必向上遍历
+                    upNode.eachChild(function (child) {
+                        if (!child.data.checked) {
+                            allChecked = false;
+
+                            return false;
+                        }
+                    });
+
+                    upNode.set('checked', allChecked);
+                    if (allChecked) {
+                        travelParentChecked(upNode, allChecked, opts);
+                    } else {//如果后台传递数据时，选择状态正确的话，此处不需要执行
+                        //travelParentChecked(upNode, allChecked, opts);
+                    }
+                } else {//未选中，让父节点全都 不选
+                    if (upNode.data.checked) {
+                        upNode.set('checked', checkStatus);
+                        travelParentChecked(upNode, checkStatus, opts);
+                    } else {
+                        //travelParentChecked(upNode, allChecked, opts);
+                    }
+                }
+            }
+        };
+
+        /** 递归遍历子节点，复选框 **/
+        var travelChildrenChecked = function (node, checkStatus, eOpts) {
+            var isLeaf = node.data.leaf;
+            if (!isLeaf) {
+                node.expand(false, function () {
+                    if (eOpts["isPassive"] == null) {//主动点击
+                        node.eachChild(function (child) {
+                            child.set('checked', checkStatus);
+                            travelChildrenChecked(child, checkStatus, eOpts);
+//                            child.fireEvent('checkchange', child, checkStatus);//递归触发
+                        });
+                    }
+                });
+            }
+            node.set('checked', checkStatus);
+        };
+        var cdmTreeFirstLoad = true;
+        Ext.create('Ext.tree.Panel', {
+            renderTo: document.body,
+            title: '借阅权限',
+            width: 300,
+            height: 900,
+            listeners: {
+                load: function (_this, records, successful, operation, node, eOpts) {
+                    if (cdmTreeFirstLoad) {//第一次加载时，自动展开root 节点
+                        cdmTreeFirstLoad = false;
+                        _this.getRootNode().expand(true);
+                        console.log(_this.getRootNode());
+                    }
+                },
+                checkchange: function (node, checked, eOpts) {
+                    travelChildrenChecked(node, checked, eOpts);
+                    travelParentChecked(node, checked, eOpts);
+                }
+            },
+            root: {
+                "checked": false,
+                "children": [{
+                    "checked": 0,
+                    "children": [],
+                    "expanded": false,
+                    "iconCls": "no-icon",
+                    "id": "631a7c93-4bbf-4411-9a98-cfbf6e51ff5a",
+                    "leaf": false,
+                    "parentId": "",
+                    "sfyx": "0",
+                    "text": "录入一组",
+                    "yhid": "",
+                    "zlbid": ""
+                }, {
+                    "checked": 1,
+                    "children": [],
+                    "expanded": false,
+                    "iconCls": "no-icon",
+                    "id": "148edbc6-512c-4235-90d5-4251c18f6ace",
+                    "leaf": false,
+                    "parentId": "",
+                    "sfyx": "0",
+                    "text": "录入二组",
+                    "yhid": "",
+                    "zlbid": ""
+                }, {
+                    "checked": false,
+                    "children": [{
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "4be2d702-8b7d-4800-a427-2edd7bff2a72",
+                                "leaf": false,
+                                "parentId": "cabd1f3b-649a-450c-b73e-a5d1c596b27b",
+                                "sfyx": "0",
+                                "text": "孙海波",
+                                "yhid": "4be2d702-8b7d-4800-a427-2edd7bff2a72",
+                                "zlbid": ""
+                            }, {
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "28c749b6-9224-4b1b-ad21-7692b708c68a",
+                                "leaf": false,
+                                "parentId": "cabd1f3b-649a-450c-b73e-a5d1c596b27b",
+                                "sfyx": "0",
+                                "text": "王武",
+                                "yhid": "28c749b6-9224-4b1b-ad21-7692b708c68a",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "cabd1f3b-649a-450c-b73e-a5d1c596b27b",
+                            "leaf": false,
+                            "parentId": "a5dfb3ad-942f-4c1a-998b-e2b253a44ffb",
+                            "sfyx": "0",
+                            "text": "录入一组组员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "709d6272-0417-430f-8f70-c817a5b5b473",
+                            "leaf": false,
+                            "parentId": "a5dfb3ad-942f-4c1a-998b-e2b253a44ffb",
+                            "sfyx": "0",
+                            "text": "郑佳",
+                            "yhid": "709d6272-0417-430f-8f70-c817a5b5b473",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "a5dfb3ad-942f-4c1a-998b-e2b253a44ffb",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "录入一组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "c6f99e75-c733-4118-bc21-4da2a2763b42",
+                                "leaf": false,
+                                "parentId": "86eac6e0-ca7e-441e-a596-cc89d03b77c3",
+                                "sfyx": "0",
+                                "text": "王智强",
+                                "yhid": "c6f99e75-c733-4118-bc21-4da2a2763b42",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "86eac6e0-ca7e-441e-a596-cc89d03b77c3",
+                            "leaf": false,
+                            "parentId": "18f9ed83-9a20-4999-97b0-664ec2fb0b2a",
+                            "sfyx": "0",
+                            "text": "录入二组组员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "b4b75783-6565-43f3-b17f-3032bd5f6708",
+                            "leaf": false,
+                            "parentId": "18f9ed83-9a20-4999-97b0-664ec2fb0b2a",
+                            "sfyx": "0",
+                            "text": "阴龙江",
+                            "yhid": "b4b75783-6565-43f3-b17f-3032bd5f6708",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "18f9ed83-9a20-4999-97b0-664ec2fb0b2a",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "录入二组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "26eed36b-4944-419f-9256-b960c617c97d",
+                                "leaf": false,
+                                "parentId": "c9391384-caff-4873-847a-604f8ca32845",
+                                "sfyx": "0",
+                                "text": "皮敏",
+                                "yhid": "26eed36b-4944-419f-9256-b960c617c97d",
+                                "zlbid": ""
+                            }, {
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "e37ecad1-d89f-405b-a5b0-45964ddc8868",
+                                "leaf": false,
+                                "parentId": "c9391384-caff-4873-847a-604f8ca32845",
+                                "sfyx": "0",
+                                "text": "组员1",
+                                "yhid": "e37ecad1-d89f-405b-a5b0-45964ddc8868",
+                                "zlbid": ""
+                            }, {
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "8c894505-2cbe-4892-9001-412e60a444e9",
+                                "leaf": false,
+                                "parentId": "c9391384-caff-4873-847a-604f8ca32845",
+                                "sfyx": "0",
+                                "text": "组员2",
+                                "yhid": "8c894505-2cbe-4892-9001-412e60a444e9",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "c9391384-caff-4873-847a-604f8ca32845",
+                            "leaf": false,
+                            "parentId": "6c1530c3-6842-4182-8b90-185e866f5b71",
+                            "sfyx": "0",
+                            "text": "录入三组组员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "eba72b24-e79f-40a6-8e53-09b2741cf1fc",
+                            "leaf": false,
+                            "parentId": "6c1530c3-6842-4182-8b90-185e866f5b71",
+                            "sfyx": "0",
+                            "text": "郑佳-组长",
+                            "yhid": "eba72b24-e79f-40a6-8e53-09b2741cf1fc",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "6c1530c3-6842-4182-8b90-185e866f5b71",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "录入三组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "31d7fb2e-9563-4d83-ba02-27af31a8ad3c",
+                            "leaf": false,
+                            "parentId": "52eb86f9-6aa0-4054-b001-ff77a298d107",
+                            "sfyx": "0",
+                            "text": "质检人员-张三",
+                            "yhid": "31d7fb2e-9563-4d83-ba02-27af31a8ad3c",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "8ed2779c-74d6-4523-a871-299be4d4ddd0",
+                            "leaf": false,
+                            "parentId": "52eb86f9-6aa0-4054-b001-ff77a298d107",
+                            "sfyx": "0",
+                            "text": "质检1",
+                            "yhid": "8ed2779c-74d6-4523-a871-299be4d4ddd0",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "52eb86f9-6aa0-4054-b001-ff77a298d107",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "质检小组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "2fdda9fd-e098-4b19-ae81-64f54b45321e",
+                            "leaf": false,
+                            "parentId": "93cd709b-2cdb-4e0a-b050-f4d0a17cbd4e",
+                            "sfyx": "0",
+                            "text": "档案归集-李四",
+                            "yhid": "2fdda9fd-e098-4b19-ae81-64f54b45321e",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "93cd709b-2cdb-4e0a-b050-f4d0a17cbd4e",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "归集小组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "74a990bb-14b2-4fdf-9e91-58a80ce2741b",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "数据关联小组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "629dce9e-fd9a-4906-b8a2-3bb033d5a4c5",
+                                "leaf": false,
+                                "parentId": "ea48cfcc-af74-40a0-832c-beb104b348a8",
+                                "sfyx": "0",
+                                "text": "录入a1",
+                                "yhid": "629dce9e-fd9a-4906-b8a2-3bb033d5a4c5",
+                                "zlbid": ""
+                            }, {
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "a214ec19-d8ea-46c0-ad31-fb43bdb5fded",
+                                "leaf": false,
+                                "parentId": "ea48cfcc-af74-40a0-832c-beb104b348a8",
+                                "sfyx": "0",
+                                "text": "录入a2",
+                                "yhid": "a214ec19-d8ea-46c0-ad31-fb43bdb5fded",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "ea48cfcc-af74-40a0-832c-beb104b348a8",
+                            "leaf": false,
+                            "parentId": "ad8ae813-ef6a-4255-92fc-3d482b56b9be",
+                            "sfyx": "0",
+                            "text": "录入A组成员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "760385cc-0614-4f34-8fed-948dc7a5c9c7",
+                            "leaf": false,
+                            "parentId": "ad8ae813-ef6a-4255-92fc-3d482b56b9be",
+                            "sfyx": "0",
+                            "text": "录入a组组长",
+                            "yhid": "760385cc-0614-4f34-8fed-948dc7a5c9c7",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "ad8ae813-ef6a-4255-92fc-3d482b56b9be",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "录入A组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "1dbab63f-fe93-44e4-8a54-53a0f60e1cf9",
+                                "leaf": false,
+                                "parentId": "e4e756f1-eb12-4dbc-b346-f42736a3c6d9",
+                                "sfyx": "0",
+                                "text": "录入b1",
+                                "yhid": "1dbab63f-fe93-44e4-8a54-53a0f60e1cf9",
+                                "zlbid": ""
+                            }, {
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "5749c334-c7f8-46b0-95c4-f1bbf050f780",
+                                "leaf": false,
+                                "parentId": "e4e756f1-eb12-4dbc-b346-f42736a3c6d9",
+                                "sfyx": "0",
+                                "text": "录入b2",
+                                "yhid": "5749c334-c7f8-46b0-95c4-f1bbf050f780",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "e4e756f1-eb12-4dbc-b346-f42736a3c6d9",
+                            "leaf": false,
+                            "parentId": "301db682-4bbc-4a84-943c-9273cd4f6f85",
+                            "sfyx": "0",
+                            "text": "录入B组成员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "76816fc2-8feb-407c-8add-5b9685cb2a70",
+                            "leaf": false,
+                            "parentId": "301db682-4bbc-4a84-943c-9273cd4f6f85",
+                            "sfyx": "0",
+                            "text": "录入B组组长",
+                            "yhid": "76816fc2-8feb-407c-8add-5b9685cb2a70",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "301db682-4bbc-4a84-943c-9273cd4f6f85",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "录入B组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "97cde1c3-b8f1-447a-9072-e6985b4e0b89",
+                        "leaf": false,
+                        "parentId": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                        "sfyx": "0",
+                        "text": "李宝林",
+                        "yhid": "97cde1c3-b8f1-447a-9072-e6985b4e0b89",
+                        "zlbid": ""
+                    }],
+                    "expanded": false,
+                    "iconCls": "no-icon",
+                    "id": "9cf308d5-2c6f-400c-b9d7-07d789f3f933",
+                    "leaf": false,
+                    "parentId": "",
+                    "sfyx": "0",
+                    "text": "数据清理小组",
+                    "yhid": "",
+                    "zlbid": ""
+                }, {
+                    "checked": false,
+                    "children": [{
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "d21c8903-b621-489b-bad8-25ac7fa210ef",
+                                "leaf": false,
+                                "parentId": "6cca0357-e1da-4470-8ee5-45c1ffe0f9a2",
+                                "sfyx": "0",
+                                "text": "档案采集组组员",
+                                "yhid": "d21c8903-b621-489b-bad8-25ac7fa210ef",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "6cca0357-e1da-4470-8ee5-45c1ffe0f9a2",
+                            "leaf": false,
+                            "parentId": "5cdeac2b-46af-4f78-83d8-b067ee775e91",
+                            "sfyx": "0",
+                            "text": "采集组员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "4970abcf-336d-46fb-8a7c-42bc01a5b7b5",
+                            "leaf": false,
+                            "parentId": "5cdeac2b-46af-4f78-83d8-b067ee775e91",
+                            "sfyx": "0",
+                            "text": "档案采集组组长",
+                            "yhid": "4970abcf-336d-46fb-8a7c-42bc01a5b7b5",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "5cdeac2b-46af-4f78-83d8-b067ee775e91",
+                        "leaf": false,
+                        "parentId": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                        "sfyx": "0",
+                        "text": "采集组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [{
+                                "checked": false,
+                                "children": [],
+                                "expanded": false,
+                                "iconCls": "no-icon",
+                                "id": "2c72cdba-cbea-4655-b18c-358b89419278",
+                                "leaf": false,
+                                "parentId": "97b48c29-c693-4fc9-a8b8-902ff33f4bae",
+                                "sfyx": "0",
+                                "text": "档案归档组组员",
+                                "yhid": "2c72cdba-cbea-4655-b18c-358b89419278",
+                                "zlbid": ""
+                            }],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "97b48c29-c693-4fc9-a8b8-902ff33f4bae",
+                            "leaf": false,
+                            "parentId": "e06ce242-56d6-4206-8ce3-913906895ed3",
+                            "sfyx": "0",
+                            "text": "归档组员",
+                            "yhid": "",
+                            "zlbid": ""
+                        }, {
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "6af95d2a-0b96-4412-b5b5-325b6b43822b",
+                            "leaf": false,
+                            "parentId": "e06ce242-56d6-4206-8ce3-913906895ed3",
+                            "sfyx": "0",
+                            "text": "档案归档组长",
+                            "yhid": "6af95d2a-0b96-4412-b5b5-325b6b43822b",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "e06ce242-56d6-4206-8ce3-913906895ed3",
+                        "leaf": false,
+                        "parentId": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                        "sfyx": "0",
+                        "text": "归档组",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "d3f1bb5a-ccf7-4f08-a8b7-eb22973899b6",
+                        "leaf": false,
+                        "parentId": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                        "sfyx": "0",
+                        "text": "刘礼",
+                        "yhid": "d3f1bb5a-ccf7-4f08-a8b7-eb22973899b6",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "862ce2d6-dc31-46b9-961f-6fa1fc49bbb5",
+                        "leaf": false,
+                        "parentId": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                        "sfyx": "0",
+                        "text": "朱自豪",
+                        "yhid": "862ce2d6-dc31-46b9-961f-6fa1fc49bbb5",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "17720c4c-b6e0-4221-ba37-ecedf33a610e",
+                        "leaf": false,
+                        "parentId": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                        "sfyx": "0",
+                        "text": "牟远强",
+                        "yhid": "17720c4c-b6e0-4221-ba37-ecedf33a610e",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "02e1747b-b093-41d7-9e64-bfb5d9a5457f",
+                        "leaf": false,
+                        "parentId": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                        "sfyx": "0",
+                        "text": "李骄",
+                        "yhid": "02e1747b-b093-41d7-9e64-bfb5d9a5457f",
+                        "zlbid": ""
+                    }],
+                    "expanded": false,
+                    "iconCls": "no-icon",
+                    "id": "a7309f91-d188-4245-9d4e-d9835c650a48",
+                    "leaf": false,
+                    "parentId": "",
+                    "sfyx": "0",
+                    "text": "档案管理小组",
+                    "yhid": "",
+                    "zlbid": ""
+                }, {
+                    "checked": false,
+                    "children": [{
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "35a153ab-969f-4003-8457-b2e5c59ac884",
+                        "leaf": false,
+                        "parentId": "f78d27e8-e1bb-4d15-8fbd-ac9f3b4fb9cc",
+                        "sfyx": "0",
+                        "text": "gzl",
+                        "yhid": "35a153ab-969f-4003-8457-b2e5c59ac884",
+                        "zlbid": ""
+                    }],
+                    "expanded": false,
+                    "iconCls": "no-icon",
+                    "id": "f78d27e8-e1bb-4d15-8fbd-ac9f3b4fb9cc",
+                    "leaf": false,
+                    "parentId": "",
+                    "sfyx": "0",
+                    "text": "工作流",
+                    "yhid": "",
+                    "zlbid": ""
+                }, {
+                    "checked": false,
+                    "children": [{
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "bd5dd075-8be6-4d70-9a13-ec55f8874921",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "质检科",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "a5c21fdb-e9d3-464b-b150-a2190fe52fed",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "归集科",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [{
+                            "checked": false,
+                            "children": [],
+                            "expanded": false,
+                            "iconCls": "no-icon",
+                            "id": "6d5df439-66fa-4c4c-91ee-5ef34754f7c8",
+                            "leaf": false,
+                            "parentId": "493e9f66-7eb7-4ea2-b46f-13c0238baa3b",
+                            "sfyx": "0",
+                            "text": "ddd",
+                            "yhid": "6d5df439-66fa-4c4c-91ee-5ef34754f7c8",
+                            "zlbid": ""
+                        }],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "493e9f66-7eb7-4ea2-b46f-13c0238baa3b",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "测试",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "12ab0005-7d80-4b55-b6c1-f1cf8ae82752",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "受理科",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "cdac48ff-9382-40e5-ae25-56f43b371b1a",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "审核科",
+                        "yhid": "",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "62716b99-f636-4719-ae08-8f4f03d9cb1c",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "安宗源",
+                        "yhid": "62716b99-f636-4719-ae08-8f4f03d9cb1c",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "46b2d06d-f404-4334-8811-6920c8408eb5",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "罗建",
+                        "yhid": "46b2d06d-f404-4334-8811-6920c8408eb5",
+                        "zlbid": ""
+                    }, {
+                        "checked": false,
+                        "children": [],
+                        "expanded": false,
+                        "iconCls": "no-icon",
+                        "id": "c4b9d930-3722-49a0-8f79-c28d76365e6e",
+                        "leaf": false,
+                        "parentId": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                        "sfyx": "0",
+                        "text": "周洋旭",
+                        "yhid": "c4b9d930-3722-49a0-8f79-c28d76365e6e",
+                        "zlbid": ""
+                    }],
+                    "expanded": false,
+                    "iconCls": "no-icon",
+                    "id": "1231a09b-37b8-47b9-bc18-e90be44092a3",
+                    "leaf": false,
+                    "parentId": "",
+                    "sfyx": "0",
+                    "text": "信息中心",
+                    "yhid": "",
+                    "zlbid": ""
+                }],
+                "expanded": false,
+                "iconCls": "no-icon",
+                "id": "2C66E82FC8AB32FAE050A8C0F8015856",
+                "leaf": false,
+                "parentId": "",
+                "sfyx": "0",
+                "text": "大竹县不动产登记局",
+                "yhid": "",
+                "zlbid": ""
+            }
+        });
+//        var loadMask = Ext.getBody().mask('努力加载中......');
+//        Ext.Function.defer(function () {
+//            loadMask.hide();
+//        }, 4000);
+
+    });
+</script>
+<body>
+
+</body>
+</html>
