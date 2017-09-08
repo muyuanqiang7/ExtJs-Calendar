@@ -220,15 +220,16 @@ Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
                 }, {
                     xtype: 'displayfield',
                     value: '农用地',
+                    colspan: 2
                 }, {
                     xtype: 'nobordertextfield',
                     readOnly: me.isReadOnly,
                     name: 'zjh',
-                    colspan: 4,
+                    colspan: 3,
                 }, {
                     xtype: 'displayfield',
                     value: '其中',
-                    //colspan: 1,
+                    colspan: 1,
                     rowspan: 4
                 }, {
                     xtype: 'displayfield',
@@ -265,19 +266,21 @@ Ext.define('app.platform.archives.view.itemPages.LandOwnershipForm', {
                 }, {
                     xtype: 'displayfield',
                     value: '建设用地',
+                    colspan: 2
                 }, {
                     xtype: 'nobordertextfield',
                     readOnly: me.isReadOnly,
                     name: 'zjh',
-                    colspan: 4
+                    colspan: 3
                 }, {
                     xtype: 'displayfield',
                     value: '未利用地',
+                    colspan: 2
                 }, {
                     xtype: 'nobordertextfield',
                     readOnly: me.isReadOnly,
                     name: 'zjh',
-                    colspan: 4
+                    colspan: 3
                 }, {
                     xtype: 'displayfield',
                     value: '不动产权证书号<span style="color:red">*</span>',
