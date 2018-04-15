@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stateful-Grid</title>
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
+
+<!-- GC -->
+<script type="text/javascript" src="./extJs/ext-all-debug.js"></script>
+<script type="text/javascript" src="CategoryEdit.js"></script>
+<script type="text/javascript" src="CategoryEditTabThree.js"></script>
+<script type="text/javascript">
+    Ext.onReady(function () {
+        Ext.application({
+            name: 'NQ',
+            appFolder: 'UI/app',
+            init: function () {
+                Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({id: 'appLocalStorageProvider'}));
+            },
+            launch: function () {
+                let storage = Ext.util.LocalStorage.get("appLocalStorageProvider");
+                storage.setItem("foo", "local");
+                console.log(storage.getItem("ext-statefulgrid"));
+                console.log(storage.getItem("appLocalStorageProvider-foo"));
+                console.log(storage);
+                Ext.create('Ext.container.Viewport', {
+                    layout: {
+                        type: 'border',
+                        padding: '5'
+                    },
+                    items: [{
+                        xtype: 'gridpanel',
+                        stateful: true,
+                        stateId: 'statefulgrid',
+                        columns: [{
+                            header: 'name'
+                        }, {
+                            header: 'email'
+                        }, {
+                            header: 'age'
+                        }
+                        ]
+                    }]
+                });
+            }
+        });
+
+    });
+</script>
+<body>
+</body>
+</html>
