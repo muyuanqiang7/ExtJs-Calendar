@@ -12,18 +12,21 @@
 <script type="text/javascript" src="CategoryEditTabThree.js"></script>
 <script type="text/javascript">
     Ext.onReady(function () {
+        function lengthInUtf8Bytes(str) {
+            // Matches only the 10.. bytes that are non-initial characters in a multi-byte sequence.
+            var m = encodeURIComponent(str).match(/%[89ABab]/g);
+            return str.length + (m ? m.length : 0);
+        }
+
         Ext.application({
             name: 'app',
-            appFolder: 'calendar/app',
             init: function () {
-                Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({id: 'appLocalStorageProvider'}));
+                Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider({
+                    id: 'appLocalStorageProvider',
+                    prefix: 'ext-'
+                }));
             },
             launch: function () {
-                let storage = Ext.util.LocalStorage.get("appLocalStorageProvider");
-                storage.setItem("foo", "local");
-                console.log(storage.getItem("ext-statefulgrid"));
-                console.log(storage.getItem("appLocalStorageProvider-foo"));
-                console.log(storage);
                 Ext.create('Ext.container.Viewport', {
                     layout: {
                         type: 'border',
