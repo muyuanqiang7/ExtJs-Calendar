@@ -46,23 +46,23 @@ Ext.define('app.platform.estate.view.register.regiconfig.businesslogicconfig.Reg
         Ext.tip.QuickTipManager.init();
         //var context = Ext.create("app.Context");
         var me = this;
-        var yslxStore = context.getBusinessLogicConstraintTypeStore();
-        var result = Ext.appContext.invokeService(Funi.core.Context.path("estate", "/test/info"),
-                {
-                    lxdm: '1010101001',
-                    yslx: 'jmys',
-                    fwbh: 'dbc1ba56-74c0-4357-a91a-39b61b54bfe7,dbc1ba56-74c0-4357-a91a,dbc1ba56-74c0-4357-a91a-adh67d'
-                });
+        // var yslxStore = context.getBusinessLogicConstraintTypeStore();
+        // var result = Ext.appContext.invokeService(Funi.core.Context.path("estate", "/test/info"),
+        //         {
+        //             lxdm: '1010101001',
+        //             yslx: 'jmys',
+        //             fwbh: 'dbc1ba56-74c0-4357-a91a-39b61b54bfe7,dbc1ba56-74c0-4357-a91a,dbc1ba56-74c0-4357-a91a-adh67d'
+        //         });
         var successStore = Ext.create('Ext.data.Store', {
             autoLoad: true,
             fields: ['ljmc', 'status', 'tskg', 'yslx', 'message'],
             groupField: 'yslx',
-            data: result.success
+            // data: result.success
         });
         var failStore = Ext.create('Ext.data.Store', {
             autoLoad: true,
             fields: ['ljmc', 'status', 'tskg', 'yslx', 'message'],
-            data: result.fail
+            // data: result.fail
         });
         //store callback event listeners does not work
         //修改默认显示信息

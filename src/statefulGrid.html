@@ -7,6 +7,11 @@
 <link rel="stylesheet" type="text/css" href="../resources/css/extJs/ext-theme-crisp-all.css"/>
 
 <!-- GC -->
+<style type="text/css">
+    .no-icon {
+        display: none !important;
+    }
+</style>
 <script type="text/javascript" src="./extJs/ext-all-debug.js"></script>
 <script type="text/javascript">
     Ext.onReady(function () {
@@ -25,13 +30,35 @@
                 }));
             },
             launch: function () {
-                Ext.create('Ext.container.Viewport', {
+                var store = Ext.create('Ext.data.TreeStore', {
+                    root: {
+                        expanded: true,
+                        checked: false,
+                        iconCls: 'no-icon',
+                        children: [
+                            {text: 'detention', leaf: true, checked: false, iconCls: 'no-icon'},
+                            {text: 'homework', checked: false, iconCls: 'no-icon', leaf: true},
+                            {text: 'buy lottery tickets', leaf: true, checked: false, iconCls: 'no-icon'},
+                            {text: 'sale lottery tickets', leaf: true, checked: false, iconCls: 'no-icon'},
+                            {text: 'lottery tickets', leaf: true, checked: false, iconCls: 'no-icon'},
+                            {text: 'tickets', leaf: true, checked: false, iconCls: 'no-icon'},
+                        ]
+                    }
+                });
+
+
+                Ext.create('Ext.container.Container', {
                     layout: {
-                        type: 'border',
-                        padding: '5'
+                        type: 'hbox',
+                        // padding: '5'
                     },
+                    border: 1,
+                    width: '100%',
+                    renderTo: Ext.getBody(),
+                    style: {borderColor: '#000000', borderStyle: 'solid', borderWidth: '1px'},
                     items: [{
                         xtype: 'gridpanel',
+                        flex: 4,
                         stateful: true,
                         stateId: 'statefulgrid',
                         columns: [{
@@ -42,6 +69,13 @@
                             header: 'age'
                         }
                         ]
+                    }, {
+                        xtype: 'treepanel',
+                        title: '审批人员选择',
+                        flex: 1,
+                        store: store,
+                        rootVisible: false,
+                        // hidden: true,
                     }]
                 });
             }
